@@ -99,6 +99,10 @@ button, input { font: inherit; }
 @media (max-width: 520px) { .footer-reference { grid-template-columns: 1fr; gap: 28px; padding-top: 52px; } .footer-section h3 { font-size: 1.5rem; } .footer-subscribe form { flex-direction: column; } .footer-subscribe button { width: 100%; } .footer-bottom { padding-bottom: 20px; } }
 .detail-band { background: linear-gradient(180deg, rgba(6,16,22,.94), rgba(5,12,17,.96)); }.detail-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 100px; align-items: center; }.detail-grid > img { height: 480px; filter: saturate(.7); }.detail-grid h2 { margin: 14px 0 22px; font: 500 clamp(38px, 4vw, 58px)/1.07 var(--display); }.detail-grid p { max-width: 440px; color: var(--muted); font-size: 14px; }.detail-grid .button { margin-top: 12px; }
 
+/* Inline thumbnail for Magarini text flow */
+.magarini-inline-thumb { float: left; width: 110px; height: auto; margin-right: 16px; border-radius: 6px; box-shadow: 0 8px 20px rgba(46,34,54,.06); }
+.magarini-text::after { content: ''; display: table; clear: both; }
+
 .magarini-donation {
   background: linear-gradient(135deg, rgba(242,232,241,.98), rgba(255,248,241,.98));
 }
@@ -303,6 +307,57 @@ button, input { font: inherit; }
     padding: 22px 18px 18px;
   }
 }
+
+/* Compact donate toggle and layout for Ukraine on homepage */
+.ukraine-donate-wrap { margin-top: 24px; display: flex; flex-direction: column; gap: 14px; align-items: center; }
+.donate-toggle { background: #ffd85a; color: #082033; border: 0; padding: 12px 18px; border-radius: 999px; font-weight: 700; cursor: pointer; box-shadow: 0 6px 18px rgba(9,29,40,.08); }
+.donate-toggle:hover { transform: translateY(-2px); }
+.ukraine-compact { max-width: 540px; width: 100%; border-radius: 14px; padding: 18px; background: linear-gradient(180deg,#fff,#fff); color: var(--ink); box-shadow: 0 12px 30px rgba(18,34,44,.06); border: 1px solid rgba(18,34,44,.06); }
+.ukraine-compact .donation-dashboard-top { display:flex; gap:12px; align-items:center; justify-content:space-between; }
+.ukraine-compact .amount-display-big { font-size: 40px; color: var(--ink); font-weight: 800; text-align: center; margin: 6px 0 8px; }
+.ukraine-compact .amount-entry { display:flex; gap:8px; align-items:center; justify-content:center; }
+.ukraine-compact .amount-entry input { width: 120px; padding: 8px 10px; border-radius: 8px; border: 1px solid rgba(18,34,44,.08); text-align: center; }
+.ukraine-compact .currency { font-size: 18px; margin-right:6px; }
+.paypal-cta { display: inline-flex; align-items: center; justify-content: center; gap:10px; background: #ffd85a; color: #082033; border: 0; padding: 14px 18px; border-radius: 999px; font-weight: 800; box-shadow: 0 8px 20px rgba(39,70,85,.08); }
+.paypal-cta img { height: 20px; }
+.card-cta { display: inline-flex; align-items: center; justify-content: center; gap: 10px; background: transparent; color: #082033; border: 2px solid #0b4f8a; padding: 12px 18px; border-radius: 999px; font-weight: 700; }
+.ukraine-compact .donation-actions { display:flex; gap:12px; align-items:center; justify-content:center; }
+.ukraine-compact[hidden] { display: none; }
+
+@media (max-width: 520px) {
+  .ukraine-compact { padding: 14px; }
+  .donate-toggle { width: 100%; }
+}
+
+/* UX polish: center and widen donate toggle; improve Magarini donation layout */
+.ukraine-donate-wrap { display:flex; flex-direction: column; align-items: center; justify-content: center; gap: 16px; margin-top: 28px; }
+.donate-toggle { width: min(760px, 92%); max-width: 880px; text-align: center; font-size: 16px; padding: 14px 22px; box-shadow: 0 14px 30px rgba(9,29,40,.08); transition: transform .18s ease, box-shadow .18s ease; }
+.donate-toggle.is-open { background: #ffeaa7; }
+.donate-toggle:hover { transform: translateY(-3px); box-shadow: 0 20px 40px rgba(9,29,40,.12); }
+
+/* Magarini donation card polish */
+.magarini-donation { padding: 30px 0; border-radius: 12px; background: linear-gradient(180deg, rgba(255,250,248,.9), rgba(246,241,246,.95)); }
+.magarini-donation .container { display: grid; grid-template-columns: 1.25fr .75fr; gap: 28px; align-items: start; }
+.magarini-feature-card { grid-column: 1 / -1; display: grid; grid-template-columns: 360px 1fr; gap: 22px; border-radius: 12px; overflow: hidden; }
+.magarini-image-wrap { min-height: 320px; }
+.magarini-cta { padding: 26px 26px 28px; display:flex; flex-direction: column; justify-content: space-between; }
+.magarini-cta h2 { margin-bottom: 12px; font-size: clamp(22px, 3.2vw, 34px); }
+.magarini-cta p { color: var(--muted); font-size: 15px; line-height: 1.7; }
+.magarini-cta .donation-links { margin-top: 18px; }
+
+.magarini-donation .donation-dashboard { max-width: 420px; margin: 0; border-radius: 14px; }
+.magarini-donation .amount-display-big { font-size: 34px; color: var(--ink-deep); text-align: center; font-weight: 800; }
+.magarini-donation .donation-actions { display:flex; gap:12px; }
+.magarini-donation .donation-actions .button { flex: 1; border-radius: 999px; padding: 12px 14px; }
+
+@media (max-width: 900px) {
+  .magarini-donation .container { grid-template-columns: 1fr; }
+  .magarini-feature-card { grid-template-columns: 1fr; }
+  .magarini-image-wrap { min-height: 220px; }
+  .magarini-cta { padding: 18px; }
+  .donate-toggle { width: 100%; }
+}
+
 @media (max-width: 520px) {
   .magarini-donation-shell { gap: 18px; }
   .magarini-cta { padding: 22px 18px 20px; }
