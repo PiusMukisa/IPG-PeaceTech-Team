@@ -72,6 +72,10 @@ button, input { font: inherit; }
 .footer { position: relative; overflow: hidden; padding: 0; background: var(--ink-deep); }.footer::before { content: ''; display: block; height: 5px; background: linear-gradient(90deg, var(--coral) 0 27%, #5f9a9b 27% 51%, #d6a65b 51% 73%, #a5c2a5 73%); }.footer::after { content: ''; position: absolute; top: 32px; right: 7%; width: 170px; height: 170px; border: 1px solid rgba(145,170,155,.22); border-radius: 50%; box-shadow: 0 0 0 22px rgba(145,170,155,.05), 0 0 0 44px rgba(145,170,155,.035); pointer-events: none; }.footer-grid { position: relative; z-index: 1; padding-top: 72px; padding-bottom: 55px; }.footer .brand { padding: 13px 16px 13px 0; }.footer .brand-mark { box-shadow: 0 0 0 5px rgba(223,121,93,.12); }.footer h4 { color: #e9ba86; }.footer-grid > div:not(.footer-note) a { transition: color .2s ease, transform .2s ease; }.footer-grid > div:not(.footer-note) a:hover { color: #f3a384; transform: translateX(4px); }.footer-note { max-width: 250px; padding: 17px 0 0 22px; border-left: 1px solid rgba(145,170,155,.32); }.footer-note p { font-size: 20px; color: #f1e5d7; }.footer-note::after { content: 'PEACE IS A PRACTICE'; display: block; margin-top: 25px; color: #6e9693; font-size: 9px; letter-spacing: .18em; }
 .detail-band { background: var(--paper-dark); }.detail-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 100px; align-items: center; }.detail-grid > img { height: 480px; filter: saturate(.7); }.detail-grid h2 { margin: 14px 0 22px; font: 500 clamp(38px, 4vw, 58px)/1.07 var(--display); }.detail-grid p { max-width: 440px; color: var(--muted); font-size: 14px; }.detail-grid .button { margin-top: 12px; }
 
+/* Inline thumbnail for Magarini text flow */
+.magarini-inline-thumb { float: left; width: 110px; height: auto; margin-right: 16px; border-radius: 6px; box-shadow: 0 8px 20px rgba(46,34,54,.06); }
+.magarini-text::after { content: ''; display: table; clear: both; }
+
 .magarini-donation {
   background: linear-gradient(135deg, rgba(242,232,241,.98), rgba(255,248,241,.98));
 }
@@ -275,6 +279,27 @@ button, input { font: inherit; }
   .donation-dashboard {
     padding: 22px 18px 18px;
   }
+}
+
+/* Compact donate toggle and layout for Ukraine on homepage */
+.ukraine-donate-wrap { margin-top: 24px; display: flex; flex-direction: column; gap: 14px; align-items: center; }
+.donate-toggle { background: #ffd85a; color: #082033; border: 0; padding: 12px 18px; border-radius: 999px; font-weight: 700; cursor: pointer; box-shadow: 0 6px 18px rgba(9,29,40,.08); }
+.donate-toggle:hover { transform: translateY(-2px); }
+.ukraine-compact { max-width: 540px; width: 100%; border-radius: 14px; padding: 18px; background: linear-gradient(180deg,#fff,#fff); color: var(--ink); box-shadow: 0 12px 30px rgba(18,34,44,.06); border: 1px solid rgba(18,34,44,.06); }
+.ukraine-compact .donation-dashboard-top { display:flex; gap:12px; align-items:center; justify-content:space-between; }
+.ukraine-compact .amount-display-big { font-size: 40px; color: var(--ink); font-weight: 800; text-align: center; margin: 6px 0 8px; }
+.ukraine-compact .amount-entry { display:flex; gap:8px; align-items:center; justify-content:center; }
+.ukraine-compact .amount-entry input { width: 120px; padding: 8px 10px; border-radius: 8px; border: 1px solid rgba(18,34,44,.08); text-align: center; }
+.ukraine-compact .currency { font-size: 18px; margin-right:6px; }
+.paypal-cta { display: inline-flex; align-items: center; justify-content: center; gap:10px; background: #ffd85a; color: #082033; border: 0; padding: 14px 18px; border-radius: 999px; font-weight: 800; box-shadow: 0 8px 20px rgba(39,70,85,.08); }
+.paypal-cta img { height: 20px; }
+.card-cta { display: inline-flex; align-items: center; justify-content: center; gap: 10px; background: transparent; color: #082033; border: 2px solid #0b4f8a; padding: 12px 18px; border-radius: 999px; font-weight: 700; }
+.ukraine-compact .donation-actions { display:flex; gap:12px; align-items:center; justify-content:center; }
+.ukraine-compact[hidden] { display: none; }
+
+@media (max-width: 520px) {
+  .ukraine-compact { padding: 14px; }
+  .donate-toggle { width: 100%; }
 }
 @media (max-width: 520px) {
   .magarini-donation-shell { gap: 18px; }
