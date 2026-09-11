@@ -6,12 +6,30 @@ if (menuToggle && navMenu) {
     const isOpen = menuToggle.getAttribute('aria-expanded') === 'true';
     menuToggle.setAttribute('aria-expanded', String(!isOpen));
     navMenu.classList.toggle('is-open', !isOpen);
+    document.querySelectorAll('.nav-dropdown.is-open').forEach((dropdown) => dropdown.classList.remove('is-open'));
+    document.querySelectorAll('.nav-dropdown > a').forEach((toggle) => toggle.setAttribute('aria-expanded', 'false'));
   });
 
-  document.querySelectorAll('.nav-menu a').forEach((link) => {
+  // Links inside the mobile menu close it on tap, except the "Projects" dropdown
+  // toggle itself, which gets its own open/close handling below (a real <a> with
+  // no JS toggle would otherwise just navigate away on the first tap).
+  document.querySelectorAll('.nav-menu a:not(.nav-dropdown > a)').forEach((link) => {
     link.addEventListener('click', () => {
       menuToggle.setAttribute('aria-expanded', 'false');
       navMenu.classList.remove('is-open');
+    });
+  });
+
+  document.querySelectorAll('.nav-dropdown > a').forEach((toggle) => {
+    toggle.addEventListener('click', (event) => {
+      if (!window.matchMedia('(max-width: 900px)').matches) return;
+      const dropdown = toggle.closest('.nav-dropdown');
+      if (!dropdown.classList.contains('is-open')) {
+        event.preventDefault();
+        dropdown.classList.add('is-open');
+        toggle.setAttribute('aria-expanded', 'true');
+      }
+      // second tap while already open: let it navigate to the Projects page normally
     });
   });
 }
