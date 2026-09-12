@@ -1642,3 +1642,9 @@ body:has(.home-about) .board-preview-btn:hover { background: linear-gradient(90d
 .hh-about-grid h3 { margin: 0 0 12px; padding-top: 16px; border-top: 2px solid var(--coral); font: 500 24px var(--display); color: var(--ink); }
 .hh-about-grid p { margin: 0; color: var(--muted); font-size: 14px; line-height: 1.7; }
 @media (max-width: 720px) { .hh-about-grid { grid-template-columns: 1fr; gap: 28px; } }
+
+/* Healing History is a dark-canvas page — keep all body text legible on it */
+.hh-copy p, .hh-fund p, .hh-about-lead p, .hh-about-grid p { color: #c2d3d9; }
+.hh-copy .hh-quote, .hh-about-lead .hh-lead-p { color: #eef4f6; }
+.hh-about-grid h3 { color: #eef5f8; }
+.hh-copy .story-kicker, .hh-about-lead .story-kicker { color: #7fb6cc; }
