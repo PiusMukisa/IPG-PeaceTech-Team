@@ -265,13 +265,13 @@ body:has(.home-about) .project-card-image {
   box-shadow: 0 14px 30px rgba(0,0,0,.2);
 }
 body:has(.home-about) .project-card-caption {
-  color: #eaf5fa;
-  text-decoration-color: #eaf5fa;
+  color: #17607c;
+  text-decoration-color: #17607c;
 }
 body:has(.home-about) .project-card:hover .project-card-caption,
 body:has(.home-about) .project-card:focus-visible .project-card-caption {
-  color: #7fc7dd;
-  text-decoration-color: #7fc7dd;
+  color: #3286a8;
+  text-decoration-color: #3286a8;
 }
 body:has(.home-about) .welcome-project {
   background: #13313d;
@@ -1644,7 +1644,10 @@ body:has(.home-about) .board-preview-btn:hover { background: linear-gradient(90d
 @media (max-width: 720px) { .hh-about-grid { grid-template-columns: 1fr; gap: 28px; } }
 
 /* Healing History is a dark-canvas page — keep all body text legible on it */
-.hh-copy p, .hh-fund p, .hh-about-lead p, .hh-about-grid p { color: #c2d3d9; }
+.hh-copy p, .hh-about-lead p, .hh-about-grid p { color: #c2d3d9; }
 .hh-copy .hh-quote, .hh-about-lead .hh-lead-p { color: #eef4f6; }
 .hh-about-grid h3 { color: #eef5f8; }
 .hh-copy .story-kicker, .hh-about-lead .story-kicker { color: #7fb6cc; }
+/* hh-activities is a light panel — keep its heading/text dark for contrast */
+.hh-activities .section-heading h2 { color: var(--ink); }
+.hh-fund p { color: var(--muted); }
