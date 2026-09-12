@@ -1631,3 +1631,14 @@ body:has(.home-about) .board-preview-btn:hover { background: linear-gradient(90d
   .bio-entry { grid-template-columns: 1fr; gap: 20px; padding: 34px 0; }
   .bio-entry-photo { aspect-ratio: 4 / 3; min-height: 0; }
 }
+
+/* Healing History — intro overview (what it is, background, achievements) */
+.hh-about-lead { max-width: 820px; margin: 0 auto 50px; text-align: center; }
+.hh-about-lead .story-kicker { display: block; margin-bottom: 14px; }
+.hh-about-lead p { margin: 0 0 18px; color: var(--muted); font-size: 16px; line-height: 1.75; }
+.hh-about-lead p:last-child { margin-bottom: 0; }
+.hh-about-lead .hh-lead-p { color: var(--ink); font: 500 clamp(19px, 2vw, 23px)/1.55 var(--display); }
+.hh-about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; max-width: 960px; margin: 0 auto; }
+.hh-about-grid h3 { margin: 0 0 12px; padding-top: 16px; border-top: 2px solid var(--coral); font: 500 24px var(--display); color: var(--ink); }
+.hh-about-grid p { margin: 0; color: var(--muted); font-size: 14px; line-height: 1.7; }
+@media (max-width: 720px) { .hh-about-grid { grid-template-columns: 1fr; gap: 28px; } }
