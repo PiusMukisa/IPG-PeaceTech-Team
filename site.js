@@ -54,6 +54,40 @@ document.querySelectorAll('.contact-form').forEach((form) => {
   });
 });
 
+document.querySelectorAll('.js-contact-form').forEach((form) => {
+  form.addEventListener('submit', (event) => {
+    event.preventDefault();
+    const message = form.querySelector('.form-message');
+    if (!form.checkValidity()) {
+      if (message) message.textContent = 'Please add your name, a valid email, and a message.';
+      form.reportValidity();
+      return;
+    }
+    if (message) message.textContent = 'Thank you — your message has been sent. We will be in touch soon.';
+    form.reset();
+  });
+});
+
+document.querySelectorAll('.check-pill input').forEach((input) => {
+  const sync = () => input.closest('.check-pill').classList.toggle('is-checked', input.checked);
+  input.addEventListener('change', sync);
+  sync();
+});
+
+document.querySelectorAll('.booking-form').forEach((form) => {
+  form.addEventListener('submit', (event) => {
+    event.preventDefault();
+    const message = form.querySelector('.form-message');
+    if (!form.checkValidity()) {
+      if (message) message.textContent = 'Please fill in the required fields marked with *.';
+      form.reportValidity();
+      return;
+    }
+    if (message) message.textContent = 'Thank you. Your request has been received — we will reply within 2 business days.';
+    form.reset();
+  });
+});
+
 document.querySelectorAll('[data-slideshow]').forEach((slideshow) => {
   const slides = [...slideshow.querySelectorAll('.welcome-slide')];
   const toggle = slideshow.querySelector('.slideshow-toggle');
@@ -82,6 +116,77 @@ document.querySelectorAll('[data-slideshow]').forEach((slideshow) => {
     }
   });
 });
+
+// Testimonial marquee: duplicate the cards so the rightward scroll loops
+// seamlessly, then wire each card + a shared modal for reading the full text.
+document.querySelectorAll('[data-testimonial-marquee]').forEach((marquee) => {
+  const track = marquee.querySelector('.testimonial-track');
+  if (!track) return;
+  [...track.children].forEach((card) => {
+    const clone = card.cloneNode(true);
+    clone.setAttribute('aria-hidden', 'true');
+    clone.setAttribute('tabindex', '-1');
+    track.appendChild(clone);
+  });
+  marquee.classList.add('is-ready');
+});
+
+document.querySelectorAll('[data-testimonial-modal]').forEach((modal) => {
+  const body = modal.querySelector('.testimonial-modal-body');
+  const closeBtn = modal.querySelector('.testimonial-modal-close');
+  let lastFocused = null;
+
+  const open = (card) => {
+    const full = card.querySelector('.tcard-full');
+    if (!full || !body) return;
+    lastFocused = document.activeElement;
+    body.innerHTML = '';
+    body.appendChild(full.content.cloneNode(true));
+    modal.querySelector('.testimonial-modal-panel').scrollTop = 0;
+    modal.hidden = false;
+    document.body.style.overflow = 'hidden';
+    closeBtn?.focus();
+  };
+  const close = () => {
+    modal.hidden = true;
+    body.innerHTML = '';
+    document.body.style.overflow = '';
+    if (lastFocused && typeof lastFocused.focus === 'function') lastFocused.focus();
+  };
+
+  document.querySelectorAll('.tcard').forEach((card) => {
+    card.addEventListener('click', () => open(card));
+    card.addEventListener('keydown', (event) => {
+      if (event.key === 'Enter' || event.key === ' ') {
+        event.preventDefault();
+        open(card);
+      }
+    });
+  });
+
+  modal.addEventListener('click', (event) => {
+    if (event.target.closest('.testimonial-modal-close') ||
+        event.target.classList.contains('testimonial-modal-backdrop')) {
+      close();
+    }
+  });
+  document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape' && !modal.hidden) close();
+  });
+});
+
+// Highlight the current page (and its dropdown parent) in the shared nav.
+(() => {
+  const here = (location.pathname.split('/').pop() || 'index.html').toLowerCase() || 'index.html';
+  const fileOf = (a) => (a.getAttribute('href') || '').split('/').pop().split('#')[0].toLowerCase();
+  document.querySelectorAll('.nav-menu > a[href]').forEach((link) => {
+    if (fileOf(link) === here) link.classList.add('is-active');
+  });
+  document.querySelectorAll('.nav-dropdown').forEach((dd) => {
+    const inChild = [...dd.querySelectorAll('.dropdown-menu a[href]')].some((a) => fileOf(a) === here);
+    if (inChild) dd.querySelector(':scope > a')?.classList.add('is-active');
+  });
+})();
 
 const applyDonationDashboards = () => {
   // Replace Magarini detail-band with an inline-thumbnail + full text + dashboard
