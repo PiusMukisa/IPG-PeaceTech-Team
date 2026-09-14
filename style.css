@@ -1266,8 +1266,11 @@ body:has(.home-about) .board-preview-btn {
 
 /* ───────────────────────── Magarini project page ───────────────────────── */
 /* Hero: smaller, professional two-line title with a kicker */
+.about-hero.mag-hero { place-items: end center; }
 .about-hero.mag-hero h1 { max-width: 1000px; margin-left: auto; margin-right: auto; font: 500 clamp(26px, 3.5vw, 44px)/1.16 var(--display); letter-spacing: -.02em; }
 .mag-hero .about-hero-kicker { color: #e7c49b; }
+.mag-hero .about-hero-media img { object-position: center top; }
+.mag-hero .about-hero-inner { padding-bottom: 72px; }
 
 /* Content: image + opening story, a stat strip, then a comfortable reading column */
 .mag-section { padding-top: 96px; padding-bottom: 104px; }
@@ -1305,16 +1308,18 @@ body:has(.home-about) .board-preview-btn {
 .about-hero-actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 18px; margin-top: 36px; }
 
 /* Healing History hero — left-aligned full-bleed variant */
-.hh-hero { min-height: 82vh; place-items: center start; text-align: left; }
-.hh-hero .about-hero-inner { padding: 120px 0; }
-.about-hero.hh-hero h1 { margin-left: 0; margin-right: 0; max-width: 14ch; font: 500 clamp(30px, 4vw, 50px)/1.08 var(--display); letter-spacing: -.02em; text-wrap: balance; }
+.hh-hero { min-height: 74vh; place-items: start center; text-align: center; }
+.hh-hero .about-hero-media img { object-position: center 18%; }
+.hh-hero .about-hero-inner { padding: 100px 0 120px; }
+.about-hero.hh-hero h1 { margin-left: auto; margin-right: auto; max-width: none; white-space: nowrap; font: 500 clamp(24px, 3.4vw, 44px)/1.1 var(--display); letter-spacing: -.02em; }
 .about-hero.rwc-hero { place-items: end center; }
 .about-hero.rwc-hero h1 { max-width: 760px; margin-left: auto; margin-right: auto; font: 500 clamp(28px, 4vw, 48px)/1.08 var(--display); letter-spacing: -.02em; text-wrap: balance; }
 .about-hero.rwc-hero p { max-width: 560px; font-size: clamp(16px, 1.4vw, 19px); }
 .rwc-hero .about-hero-inner { padding-bottom: 84px; }
 .rwc-hero .about-hero-media img { object-position: center top; }
-.hh-hero p { margin-left: 0; margin-right: 0; max-width: 32ch; font-size: clamp(16px, 1.4vw, 19px); }
-.hh-hero .about-hero-actions { justify-content: flex-start; }
+.hh-hero p { margin-left: auto; margin-right: auto; max-width: 40ch; font-size: clamp(16px, 1.4vw, 19px); }
+.hh-hero .about-hero-actions { justify-content: center; }
+@media (max-width: 680px) { .about-hero.hh-hero h1 { white-space: normal; font-size: clamp(28px, 8vw, 40px); } }
 
 .about-intro { display: grid; grid-template-columns: .82fr 1fr; gap: 90px; align-items: center; }
 .about-intro-image { height: 560px; overflow: hidden; }
@@ -1459,7 +1464,11 @@ body:has(.home-about) .board-preview-btn {
 }
 
 /* Training page */
-.training-hero .about-hero-actions { justify-content: flex-start; }
+.training-hero .about-hero-actions { justify-content: center; }
+.about-hero.training-hero h1 { margin: 22px auto 22px; max-width: 18ch; font: 500 clamp(32px, 4.6vw, 58px)/1.05 var(--display); letter-spacing: -.02em; }
+.about-hero.training-hero p { max-width: 600px; font-size: clamp(16px, 1.5vw, 20px); }
+.training-hero .about-hero-media img { filter: saturate(.92) brightness(.92); }
+.training-hero::after { background: radial-gradient(circle at 12% 88%, rgba(231,185,141,.16), transparent 46%), linear-gradient(180deg, rgba(17,41,54,.3) 0%, rgba(38,32,52,.5) 100%); }
 .training-aims .section-heading { padding-bottom: 48px; }
 .aims-grid { display: grid; grid-template-columns: 1.3fr 1fr; gap: 70px; align-items: start; }
 .aims-col h3 { margin: 0 0 24px; padding-bottom: 14px; border-bottom: 2px solid rgba(50,134,168,.35); font: 500 27px var(--display); }
@@ -1597,6 +1606,42 @@ body:has(.home-about) .board-preview-btn {
   .contact-map { height: 330px; }
 }
 
+/* Contact page — redesigned hero, info cards, and simple form */
+.contact-hero-banner { min-height: 52vh; }
+.contact-hero-banner .about-hero-inner { padding: 96px 0; }
+.contact-hero-banner h1 { margin: 22px auto 20px; max-width: 16ch; font: 500 clamp(40px, 6vw, 70px)/1.02 var(--display); }
+.contact-hero-banner p { max-width: 560px; }
+
+.ct-cards { padding-top: 72px; padding-bottom: 24px; }
+.ct-cards-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 30px; }
+.ct-card { text-align: center; padding: 40px 26px; background: var(--white); border: 1px solid rgba(20,49,64,.09); border-radius: 18px; box-shadow: 0 10px 30px rgba(24,58,59,.06); transition: transform .25s ease, box-shadow .25s ease; }
+.ct-card:hover { transform: translateY(-5px); box-shadow: 0 22px 44px rgba(24,58,59,.12); }
+.ct-card-icon { display: inline-grid; place-items: center; width: 62px; height: 62px; margin-bottom: 20px; border-radius: 50%; background: rgba(217,124,74,.13); color: var(--coral-dark); }
+.ct-card-icon svg { width: 26px; height: 26px; }
+.ct-card h3 { margin: 0 0 12px; font: 700 13px var(--body); letter-spacing: .14em; text-transform: uppercase; color: var(--ink); }
+.ct-card p { margin: 0 0 16px; color: var(--muted); font-size: 14px; line-height: 1.6; }
+.ct-card-value { display: inline-block; color: var(--coral-dark); font-weight: 600; font-size: 15px; word-break: break-word; transition: color .2s ease; }
+.ct-card-value:hover { color: var(--coral); }
+
+.contact-form-section { padding-top: 44px; padding-bottom: 90px; }
+.contact-form-wrap { max-width: 680px; }
+.contact-form-head { text-align: center; margin-bottom: 30px; }
+.contact-form-head .story-kicker { margin-bottom: 10px; }
+.contact-form-head h2 { margin: 0 0 12px; font: 500 clamp(30px, 3.6vw, 44px)/1.06 var(--display); letter-spacing: -.02em; color: var(--ink); }
+.contact-form-head h2 em { color: var(--coral-dark); font-style: normal; font-weight: 500; }
+.contact-form-head p { margin: 0 auto; max-width: 440px; color: var(--muted); font-size: 15px; }
+.simple-form { display: grid; gap: 16px; }
+.simple-form .field-pair { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.simple-form input, .simple-form textarea { width: 100%; padding: 15px 17px; border: 1px solid #cdd9de; border-radius: 10px; background: var(--white); color: var(--ink); font: 400 15px var(--body); outline: none; transition: border-color .2s ease, box-shadow .2s ease; }
+.simple-form input::placeholder, .simple-form textarea::placeholder { color: #8fa0a8; }
+.simple-form input:focus, .simple-form textarea:focus { border-color: var(--coral); box-shadow: 0 0 0 3px rgba(217,124,74,.16); }
+.simple-form textarea { min-height: 140px; resize: vertical; }
+.simple-form .contact-submit { width: auto; justify-self: center; margin-top: 6px; min-width: 220px; justify-content: center; gap: 10px; color: #fff; background: linear-gradient(90deg, var(--coral), var(--coral-dark)); }
+.simple-form .contact-submit:hover { background: linear-gradient(90deg, var(--coral-dark), #155a76); }
+.simple-form .form-message { text-align: center; min-height: 16px; color: var(--coral-dark); font-size: 13px; }
+@media (max-width: 820px) { .ct-cards-grid { grid-template-columns: 1fr; gap: 22px; } }
+@media (max-width: 520px) { .simple-form .field-pair { grid-template-columns: 1fr; } }
+
 /* Course registration — split card */
 .reg-section { padding-top: 56px; padding-bottom: 96px; }
 .reg-card { display: grid; grid-template-columns: .82fr 1.18fr; background: var(--white); border-radius: 20px; overflow: hidden; box-shadow: 0 34px 74px rgba(24,58,59,.16); }
@@ -1727,15 +1772,12 @@ body:has(.home-about) .board-preview-btn:hover { background: linear-gradient(90d
 .hh-about-lead p:last-child { margin-bottom: 0; }
 .hh-about-lead .hh-lead-p { color: var(--ink); font: 500 clamp(19px, 2vw, 23px)/1.55 var(--display); text-align-last: center; }
 @media (max-width: 560px) { .hh-about-lead p { text-align: left; text-align-last: left; } .hh-about-lead .hh-lead-p { text-align: center; } }
-.hh-about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; max-width: 960px; margin: 0 auto; align-items: stretch; }
-.hh-about-grid h3 { margin: 0 0 12px; font: 500 24px var(--display); color: var(--ink); }
-.hh-about-text { padding-top: 18px; }
-.hh-about-grid p { margin: 0; color: var(--muted); font-size: 14px; line-height: 1.7; }
-.hh-about-text > div + div { margin-top: 34px; }
-.hh-about-figures { display: grid; grid-template-rows: 1fr 1fr; gap: 20px; }
-.hh-about-figure { margin: 0; border-radius: 18px; overflow: hidden; min-height: 180px; box-shadow: 0 18px 40px rgba(0,0,0,.3); }
+.hh-about-grid { display: grid; grid-template-columns: 1.55fr 1fr; column-gap: 44px; row-gap: 56px; max-width: 1000px; margin: 0 auto; align-items: start; }
+.hh-about-grid h3 { margin: 0 0 14px; font: 500 26px var(--display); color: var(--ink); }
+.hh-about-grid p { margin: 0; color: var(--muted); font-size: 16.5px; line-height: 1.75; }
+.hh-about-figure { margin: 44px 0 0; border-radius: 16px; overflow: hidden; aspect-ratio: 4 / 3; box-shadow: 0 12px 28px rgba(0,0,0,.22); }
 .hh-about-figure img { display: block; width: 100%; height: 100%; object-fit: cover; }
-@media (max-width: 720px) { .hh-about-grid { grid-template-columns: 1fr; gap: 28px; } .hh-about-figures { grid-template-rows: none; } .hh-about-figure { aspect-ratio: 4 / 3; min-height: 0; } }
+@media (max-width: 720px) { .hh-about-grid { grid-template-columns: 1fr; row-gap: 22px; } .hh-about-block { order: 0; } .hh-about-figure { margin-top: 0; } }
 
 /* Healing History is a dark-canvas page — keep all body text legible on it */
 .hh-copy p, .hh-about-lead p, .hh-about-grid p { color: #c2d3d9; }

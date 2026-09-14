@@ -26,16 +26,38 @@ if (menuToggle && navMenu) {
   });
 
   document.querySelectorAll('.nav-dropdown > a').forEach((toggle) => {
+    // "Projects" is a pure dropdown heading (no href); "Programs" links to a page.
+    const isLink = toggle.hasAttribute('href');
+    const toggleOpen = () => {
+      const dropdown = toggle.closest('.nav-dropdown');
+      const open = dropdown.classList.toggle('is-open');
+      toggle.setAttribute('aria-expanded', String(open));
+    };
     toggle.addEventListener('click', (event) => {
       if (!window.matchMedia('(max-width: 900px)').matches) return;
+      if (!isLink) {
+        // Pure toggle: open/close the dropdown, never navigate.
+        event.preventDefault();
+        toggleOpen();
+        return;
+      }
       const dropdown = toggle.closest('.nav-dropdown');
       if (!dropdown.classList.contains('is-open')) {
         event.preventDefault();
         dropdown.classList.add('is-open');
         toggle.setAttribute('aria-expanded', 'true');
       }
-      // second tap while already open: let it navigate to the Projects page normally
+      // second tap while already open: let it navigate to the program page normally
     });
+    if (!isLink) {
+      // Keyboard support for the hrefless toggle (Enter / Space).
+      toggle.addEventListener('keydown', (event) => {
+        if (event.key === 'Enter' || event.key === ' ') {
+          event.preventDefault();
+          toggleOpen();
+        }
+      });
+    }
   });
 }
 
