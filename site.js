@@ -395,3 +395,28 @@ document.querySelectorAll('.donate-toggle').forEach((btn) => {
     }
   });
 });
+
+// Floating donate button + popup (home page). Auto-opens once per session.
+(() => {
+  const widget = document.getElementById('donateWidget');
+  if (!widget) return;
+  const btn = widget.querySelector('.donate-fab-btn');
+  const pop = widget.querySelector('.donate-pop');
+  const closeBtn = widget.querySelector('.donate-pop-close');
+  const setOpen = (open) => {
+    pop.hidden = !open;
+    btn.setAttribute('aria-expanded', String(open));
+  };
+  btn.addEventListener('click', () => setOpen(pop.hidden));
+  closeBtn.addEventListener('click', () => {
+    setOpen(false);
+    try { sessionStorage.setItem('ipgDonateDismissed', '1'); } catch (e) {}
+  });
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') setOpen(false); });
+  document.addEventListener('click', (e) => {
+    if (!widget.contains(e.target) && !pop.hidden) setOpen(false);
+  });
+  let dismissed = false;
+  try { dismissed = sessionStorage.getItem('ipgDonateDismissed') === '1'; } catch (e) {}
+  if (!dismissed) setTimeout(() => setOpen(true), 1400);
+})();

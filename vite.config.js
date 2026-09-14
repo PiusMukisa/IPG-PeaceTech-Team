@@ -8,7 +8,6 @@ export default defineConfig({
       input: {
         home: resolve(import.meta.dirname, 'index.html'),
         about: resolve(import.meta.dirname, 'about.html'),
-        work: resolve(import.meta.dirname, 'work.html'),
         approach: resolve(import.meta.dirname, 'approach.html'),
         stories: resolve(import.meta.dirname, 'stories.html'),
         contact: resolve(import.meta.dirname, 'contact.html'),

@@ -1474,6 +1474,20 @@ body:has(.home-about) .board-preview-btn {
 .about-hero.events-hero h1 { margin: 18px auto 16px; max-width: 18ch; font: 500 clamp(28px, 4vw, 46px)/1.06 var(--display); letter-spacing: -.02em; }
 .about-hero.events-hero p { max-width: 520px; font-size: clamp(15px, 1.4vw, 18px); }
 .events-hero .about-hero-media img { object-position: center top; filter: saturate(.92) brightness(.9); }
+
+/* Floating donate button + popup (home page) */
+.donate-fab { position: fixed; right: 22px; bottom: 22px; z-index: 200; display: flex; flex-direction: column; align-items: flex-end; gap: 14px; }
+.donate-fab-btn { display: inline-flex; align-items: center; gap: 9px; padding: 14px 24px; border: 0; border-radius: 999px; background: linear-gradient(90deg, var(--coral), var(--coral-dark)); color: #fff; font: 700 15px var(--body); cursor: pointer; box-shadow: 0 14px 32px rgba(217,124,74,.45); transition: transform .2s ease, box-shadow .2s ease; }
+.donate-fab-btn:hover { transform: translateY(-2px); box-shadow: 0 18px 40px rgba(217,124,74,.55); }
+.donate-fab-btn svg { width: 20px; height: 20px; }
+.donate-pop { position: relative; width: 300px; max-width: calc(100vw - 44px); padding: 30px 24px 24px; background: #fff; border-radius: 16px; box-shadow: 0 26px 64px rgba(24,58,59,.3); animation: donatePopIn .22s ease; }
+.donate-pop h3 { margin: 0 0 8px; font: 500 21px var(--display); color: var(--ink); }
+.donate-pop p { margin: 0 0 18px; color: var(--muted); font-size: 14px; line-height: 1.55; }
+.donate-pop .button { width: 100%; justify-content: center; color: #fff; background: linear-gradient(90deg, var(--coral), var(--coral-dark)); }
+.donate-pop-close { position: absolute; top: 6px; right: 12px; border: 0; background: none; font-size: 26px; line-height: 1; color: var(--muted); cursor: pointer; }
+.donate-pop-close:hover { color: var(--ink); }
+@keyframes donatePopIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+@media (max-width: 520px) { .donate-fab { right: 14px; bottom: 14px; } .donate-fab-btn { padding: 12px 18px; } .donate-pop { width: 260px; } }
 .training-aims .section-heading { padding-bottom: 48px; }
 .aims-grid { display: grid; grid-template-columns: 1.3fr 1fr; gap: 70px; align-items: start; }
 .aims-col h3 { margin: 0 0 24px; padding-bottom: 14px; border-bottom: 2px solid rgba(50,134,168,.35); font: 500 27px var(--display); }
@@ -1761,6 +1775,10 @@ body:has(.home-about) .board-preview-btn:hover { background: linear-gradient(90d
 .bio-entry-photo::after { content: ''; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(15,32,40,0) 45%, rgba(11,25,32,.92) 100%); }
 .bio-entry-photo-caption { position: absolute; left: 0; right: 0; bottom: 0; z-index: 1; padding: 20px 22px; }
 .bio-entry-photo-caption h3 { margin: 0 0 4px; color: #fff; font: 500 24px/1.15 var(--display); }
+/* Smaller, centered board photo cards with centered captions */
+.bio-entry-photo-layout .bio-entry-photo { max-width: 280px; margin-inline: auto; aspect-ratio: 4 / 5; }
+.bio-entry-photo-layout .bio-entry-photo-caption { text-align: center; padding: 18px 16px 20px; }
+#bio-emmanuel-baya .bio-entry-photo img { object-position: 62% 26%; }
 .bio-entry-photo-placeholder { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; background: repeating-linear-gradient(155deg, #1b3742, #1b3742 12px, #19323c 12px, #19323c 24px); border: 1px dashed rgba(255,255,255,.22); }
 .bio-entry-photo-placeholder-icon { width: 46px; height: 46px; color: rgba(255,255,255,.3); }
 .bio-entry-photo-placeholder-icon svg { width: 100%; height: 100%; }
