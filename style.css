@@ -1469,6 +1469,11 @@ body:has(.home-about) .board-preview-btn {
 .about-hero.training-hero p { max-width: 600px; font-size: clamp(16px, 1.5vw, 20px); }
 .training-hero .about-hero-media img { filter: saturate(.92) brightness(.92); }
 .training-hero::after { background: radial-gradient(circle at 12% 88%, rgba(231,185,141,.16), transparent 46%), linear-gradient(180deg, rgba(17,41,54,.3) 0%, rgba(38,32,52,.5) 100%); }
+.events-hero { min-height: 64vh; place-items: end center; }
+.events-hero .about-hero-inner { padding: 90px 0 108px; }
+.about-hero.events-hero h1 { margin: 18px auto 16px; max-width: 18ch; font: 500 clamp(28px, 4vw, 46px)/1.06 var(--display); letter-spacing: -.02em; }
+.about-hero.events-hero p { max-width: 520px; font-size: clamp(15px, 1.4vw, 18px); }
+.events-hero .about-hero-media img { object-position: center top; filter: saturate(.92) brightness(.9); }
 .training-aims .section-heading { padding-bottom: 48px; }
 .aims-grid { display: grid; grid-template-columns: 1.3fr 1fr; gap: 70px; align-items: start; }
 .aims-col h3 { margin: 0 0 24px; padding-bottom: 14px; border-bottom: 2px solid rgba(50,134,168,.35); font: 500 27px var(--display); }
