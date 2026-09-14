@@ -1,3 +1,8 @@
+// Mark that JS is running so the reveal animation's opacity:0 start state only
+// applies when this script can actually turn it back on. If the script ever
+// fails to load or execute, the class is absent and all content stays visible.
+document.documentElement.classList.add('js');
+
 const menuToggle = document.querySelector('.menu-toggle');
 const navMenu = document.querySelector('.nav-menu');
 
@@ -34,16 +39,43 @@ if (menuToggle && navMenu) {
   });
 }
 
+const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+const showReveal = (element) => {
+  element.classList.add('is-visible');
+  revealObserver.unobserve(element);
+};
+
 const revealObserver = new IntersectionObserver((entries) => {
   entries.forEach((entry) => {
-    if (entry.isIntersecting) {
-      entry.target.classList.add('is-visible');
-      revealObserver.unobserve(entry.target);
+    if (entry.isIntersecting) showReveal(entry.target);
+  });
+// threshold 0 (any pixel) so tall sections reveal as soon as their top scrolls
+// into view — a percentage threshold can never be met by an element taller than
+// the viewport, which would leave its text stuck invisible.
+}, { threshold: 0, rootMargin: '0px 0px -8% 0px' });
+
+// On a normal reload the browser restores the previous scroll position, but the
+// observer only fires for elements currently intersecting. Anything already
+// scrolled past (above the viewport) would otherwise stay stuck at opacity:0 and
+// never come back into view — that was the "have to hard-refresh to see the text"
+// bug. So immediately reveal every element that is already at or above the
+// viewport, and let the observer handle the ones still below the fold.
+const sweepReveals = () => {
+  document.querySelectorAll('.reveal:not(.is-visible)').forEach((element) => {
+    if (prefersReducedMotion || element.getBoundingClientRect().top < window.innerHeight) {
+      showReveal(element);
+    } else {
+      revealObserver.observe(element);
     }
   });
-}, { threshold: 0.14 });
+};
 
-document.querySelectorAll('.reveal').forEach((element) => revealObserver.observe(element));
+sweepReveals();
+// Safety net: after full load and when restored from the back/forward cache,
+// re-check so no content is ever left invisible.
+window.addEventListener('load', sweepReveals);
+window.addEventListener('pageshow', sweepReveals);
 
 document.querySelectorAll('.contact-form').forEach((form) => {
   form.addEventListener('submit', (event) => {
