@@ -420,3 +420,14 @@ document.querySelectorAll('.donate-toggle').forEach((btn) => {
   try { dismissed = sessionStorage.getItem('ipgDonateDismissed') === '1'; } catch (e) {}
   if (!dismissed) setTimeout(() => setOpen(true), 1400);
 })();
+
+// Founder "Read more" opens a wide bio modal (About page)
+document.querySelectorAll('.read-more-btn[data-modal]').forEach((btn) => {
+  const modal = document.getElementById(btn.dataset.modal + '-modal');
+  if (!modal) return;
+  const open = () => { modal.hidden = false; document.body.style.overflow = 'hidden'; };
+  const close = () => { modal.hidden = true; document.body.style.overflow = ''; };
+  btn.addEventListener('click', open);
+  modal.querySelectorAll('[data-close]').forEach((el) => el.addEventListener('click', close));
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && !modal.hidden) close(); });
+});
