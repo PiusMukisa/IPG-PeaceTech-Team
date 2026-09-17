@@ -6,9 +6,12 @@
   --muted: #566b74;
   --paper: #f6fafb;
   --paper-dark: #e6f0f4;
-  --coral: #3286a8;
-  --coral-dark: #1f6d8a;
-  --sage: #8fbfd4;
+  --coral: #3f8ab0;
+  --coral-dark: #2b6c8f;
+  --sage: #86bccf;
+  --green: #7d993b;
+  --green-dark: #5f7a2b;
+  --green-soft: #b7cd86;
   --white: #ffffff;
   --display: 'Fredoka', 'Helvetica Neue', Arial, sans-serif;
   --body: 'DM Sans', Arial, sans-serif;
@@ -2032,3 +2035,234 @@ body:has(.home-about) .board-preview-btn:hover { background: linear-gradient(90d
 @media (max-width: 820px) {
   .hh-parallax { background-attachment: scroll; min-height: 46vh; }
 }
+
+/* ============================================================
+   Site-wide warmth & light pass — let the photographs breathe
+   (brighter, near-natural color) and add gentle motion so the
+   pages feel alive. Additive: page-specific hero overrides keep
+   their own tuning; the About hero is deliberately excluded.
+   ============================================================ */
+
+/* Photographs: near-natural saturation + a touch of light */
+.image-frame img,
+.project-image img,
+.support-image img,
+.video-feature img,
+.about-story-image img,
+.approach-image img,
+.story-feature-image img,
+.detail-grid > img,
+.mag-figure img,
+.about-intro-image img,
+.about-showcase-media img,
+.about-mission-image img,
+.welcome-slide,
+.hh-alt-media img,
+.hh-about-figure img { filter: saturate(1.02) brightness(1.05) contrast(1.02); }
+.about-quote-media img { filter: saturate(.98) brightness(1.02) sepia(.05); }
+
+/* Inner-page hero photos: lift brightness so faces read clearly.
+   Page overrides (training/events/about) are more specific and win. */
+.about-hero-media img { filter: saturate(1) brightness(1.02) contrast(1.02); }
+/* Lighter, focused scrim — headline stays legible, the scene shows through.
+   The About hero keeps its own tuned overlay. */
+.about-hero:not(.abt-hero)::after {
+  background:
+    radial-gradient(circle at 72% 18%, rgba(150,160,160,.08), transparent 46%),
+    radial-gradient(circle at 12% 88%, rgba(231,185,141,.14), transparent 44%),
+    linear-gradient(180deg, rgba(18,44,58,.26) 0%, rgba(20,40,54,.5) 100%);
+}
+.about-hero h1, .about-hero p, .about-hero-kicker { text-shadow: 0 2px 20px rgba(10,26,34,.5); }
+
+/* Gentle life on hover: cards lift, photographs drift in a touch */
+.hh-why-card, .principle, .hh-about-figure, .board-preview-card {
+  transition: transform .32s ease, box-shadow .32s ease;
+}
+.hh-why-card:hover, .principle:hover, .board-preview-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 22px 44px rgba(18,48,61,.16);
+}
+.image-frame, .support-image, .about-story-image, .story-feature-image, .hh-about-figure {
+  overflow: hidden;
+}
+.image-frame img, .support-image img, .about-story-image img,
+.story-feature-image img, .hh-alt-media img, .hh-about-figure img,
+.detail-grid > img {
+  transition: transform .8s cubic-bezier(.2,.7,.3,1), filter .4s ease;
+}
+.image-frame:hover img, .support-image:hover img, .about-story-image:hover img,
+.story-feature-image:hover img, .hh-alt-media:hover img, .hh-about-figure:hover img,
+.detail-grid:hover > img {
+  transform: scale(1.05);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hh-why-card, .principle, .hh-about-figure, .board-preview-card,
+  .image-frame img, .support-image img, .about-story-image img,
+  .story-feature-image img, .hh-alt-media img, .hh-about-figure img,
+  .detail-grid > img { transition: none; }
+  .hh-why-card:hover, .principle:hover, .board-preview-card:hover,
+  .image-frame:hover img, .support-image:hover img, .about-story-image:hover img,
+  .story-feature-image:hover img, .hh-alt-media:hover img, .hh-about-figure:hover img,
+  .detail-grid:hover > img { transform: none; }
+}
+
+/* ============================================================
+   Home "Our work" — compact cards that expand into a wide modal
+   ============================================================ */
+.welcome-project-grid:has(.welcome-project-compact) { grid-template-columns: 1fr 1fr; align-items: stretch; }
+.welcome-project-compact { display: flex; flex-direction: column; padding: 30px 30px 28px; cursor: pointer; transition: transform .3s ease, box-shadow .3s ease; }
+.welcome-project-compact:hover { transform: translateY(-6px); box-shadow: 0 26px 52px rgba(0,0,0,.30); }
+.welcome-project-compact:focus-visible { outline: 2px solid #8fc4d6; outline-offset: 4px; }
+.welcome-project-compact h3 { margin: 18px 0 14px; font: 500 clamp(23px, 2.3vw, 30px)/1.14 var(--display); }
+.welcome-project-compact .welcome-project-teaser { margin: 0 0 20px; display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden; font-size: 14.5px; line-height: 1.7; }
+.welcome-project-more { margin-top: auto; display: inline-flex; align-items: center; gap: 8px; color: #8fc4d6; font: 700 13px var(--body); letter-spacing: .02em; }
+.welcome-project-more > span { transition: transform .2s ease; }
+.welcome-project-compact:hover .welcome-project-more > span { transform: translateX(5px); }
+.welcome-project-compact .project-kicker span:last-child { color: inherit; }
+
+/* Expand modal */
+.expand-modal[hidden] { display: none; }
+.expand-modal { position: fixed; inset: 0; z-index: 300; display: flex; align-items: center; justify-content: center; padding: 24px; }
+.expand-modal-backdrop { position: absolute; inset: 0; background: rgba(8,20,26,.74); backdrop-filter: blur(2px); }
+.expand-modal-panel { position: relative; z-index: 1; width: min(760px, 100%); max-height: 86vh; overflow-y: auto; background: #16323d; border: 1px solid rgba(235,244,247,.14); border-radius: 22px; padding: 52px clamp(26px,5vw,58px); box-shadow: 0 40px 90px rgba(0,0,0,.5); animation: donatePopIn .24s ease; }
+.expand-modal-close { position: absolute; top: 14px; right: 18px; width: 42px; height: 42px; border-radius: 50%; border: 1px solid rgba(235,244,247,.2); background: transparent; color: #cdd9de; font-size: 24px; line-height: 1; cursor: pointer; transition: background .2s ease, color .2s ease; }
+.expand-modal-close:hover { background: rgba(255,255,255,.08); color: #fff; }
+.expand-modal-kicker { display: inline-block; margin-bottom: 12px; color: #8fc4d6; text-transform: uppercase; letter-spacing: .14em; font-size: 11px; font-weight: 700; }
+.expand-modal-body h3 { margin: 0 0 20px; color: #f0f6f9; font: 500 clamp(26px,3.2vw,38px)/1.14 var(--display); }
+.expand-modal-body p { margin: 0 0 16px; color: #cdd9de; font-size: 16px; line-height: 1.8; }
+.expand-modal-body p strong { color: #f0f6f9; }
+.expand-modal-body p:last-of-type { margin-bottom: 0; }
+.expand-modal-body .button { margin-top: 24px; }
+@media (max-width: 620px) {
+  .welcome-project-grid:has(.welcome-project-compact) { grid-template-columns: 1fr; }
+  .expand-modal-panel { padding: 44px 24px 34px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .welcome-project-compact { transition: none; }
+  .welcome-project-compact:hover { transform: none; }
+  .expand-modal-panel { animation: none; }
+}
+
+/* ============================================================
+   Lighter & airier palette — flip the dark "project canvas" and
+   the home dark canvas back to light so the pages breathe. Teal
+   becomes an accent; a few dark bands (hero, video, testimonial
+   cards, the "How we work" box, the Healing History feature card)
+   stay dark on purpose, for rhythm.
+   ============================================================ */
+
+/* --- Inner project/detail/principles pages: light canvas --- */
+.inner-page:has(.project-grid),
+.inner-page:has(.detail-grid),
+.inner-page:has(.mag-section),
+.inner-page:has(.principles-grid):not(:has(.principles-heading)) { background: var(--paper); color: var(--ink); }
+.inner-page:has(.project-grid) .work,
+.inner-page:has(.detail-grid) .detail-band,
+.inner-page:has(.detail-grid) .detail-band + .detail-band,
+.inner-page:has(.principles-grid):not(:has(.principles-heading)) .principles { background: var(--paper-dark); }
+.inner-page:has(.project-grid) .project-card,
+.inner-page:has(.principles-grid):not(:has(.principles-heading)) .principle { background: var(--white); color: var(--ink); box-shadow: 0 14px 34px rgba(18,48,61,.08); }
+.inner-page:has(.project-grid) .inner-hero p,
+.inner-page:has(.detail-grid) .inner-hero p,
+.inner-page:has(.principles-grid):not(:has(.principles-heading)) .inner-hero p,
+.inner-page:has(.project-grid) .project-info p,
+.inner-page:has(.detail-grid) .detail-grid p,
+.inner-page:has(.principles-grid):not(:has(.principles-heading)) .principle p { color: var(--muted); }
+.inner-page:has(.detail-grid) .detail-grid h2,
+.inner-page:has(.principles-grid):not(:has(.principles-heading)) .principle h3 { color: var(--ink-deep); }
+
+/* --- Home page: light canvas (hero + video band stay dark) --- */
+body:has(.home-about) { background: var(--paper); }
+body:has(.home-about) .project-cards,
+body:has(.home-about) .board-preview { background: var(--paper-dark); color: var(--ink); }
+body:has(.home-about) .welcome-projects,
+body:has(.home-about) .testimonial-grid { background: var(--paper-dark); color: var(--ink); }
+body:has(.home-about) .project-cards .section-heading h2,
+body:has(.home-about) .board-preview .section-heading h2,
+body:has(.home-about) .welcome-projects .section-heading h2,
+body:has(.home-about) .testimonial-grid .section-heading h2 { color: var(--ink-deep); }
+body:has(.home-about) .project-cards .section-heading > p,
+body:has(.home-about) .board-preview .section-heading > p,
+body:has(.home-about) .welcome-projects .section-heading > p,
+body:has(.home-about) .testimonial-grid .section-heading > p { color: var(--muted); }
+
+/* welcome-project cards: card 1 light; card 2 stays a teal feature */
+body:has(.home-about) .welcome-project { background: rgba(255,253,251,.92); color: var(--ink); box-shadow: 0 18px 45px rgba(20,49,64,.09); }
+body:has(.home-about) .welcome-project p { color: var(--muted); }
+body:has(.home-about) .welcome-project p strong { color: var(--ink); }
+body:has(.home-about) .welcome-project-feature { background: linear-gradient(145deg, #17384a, #244d5c); color: #f4f9fb; }
+body:has(.home-about) .welcome-project-feature p { color: #cdd9de; }
+body:has(.home-about) .welcome-project-feature p strong { color: #f0f6f9; }
+body:has(.home-about) .welcome-project-feature .welcome-project-more { color: #8fc4d6; }
+
+/* board preview cards back to clean white */
+body:has(.home-about) .board-preview-card { background: var(--white); color: var(--ink); box-shadow: 0 12px 28px rgba(18,48,61,.08); }
+body:has(.home-about) .board-preview-card strong { color: var(--ink-deep); }
+body:has(.home-about) .board-preview-card small { color: var(--muted); }
+body:has(.home-about) .board-preview-btn { background: transparent; border: 1px solid var(--coral); color: var(--coral-dark); }
+body:has(.home-about) .board-preview-btn:hover { background: linear-gradient(90deg, var(--coral), var(--coral-dark)); color: #fff; border-color: transparent; }
+
+/* --- Healing History: intro text goes dark on the now-light page --- */
+.hh-copy p, .hh-about-lead p, .hh-about-grid p { color: var(--muted); }
+.hh-copy .hh-quote, .hh-about-lead .hh-lead-p { color: var(--ink); }
+.hh-about-grid h3 { color: var(--ink); }
+.hh-copy .story-kicker { color: var(--coral-dark); }
+.inner-page:has(.principles-grid) .hh-about-lead .story-kicker { color: var(--coral-dark); }
+
+/* --- Home hero caption: compact, lets more of the slideshow show --- */
+.home-about-copy { width: min(290px, 30%); padding: 17px 20px; bottom: 38px; background: rgba(24,16,34,.7); }
+.home-about-copy p { font-size: 12.5px; line-height: 1.55; margin-bottom: 10px; }
+.home-about-copy p:last-child { margin-bottom: 0; }
+@media (max-width: 900px) { .home-about-copy { width: min(360px, calc(100% - 44px)); padding: 18px 20px; } }
+
+/* --- Magarini: text goes dark on the now-light page --- */
+.mag-lead p { color: var(--ink); }
+.mag-body p { color: var(--muted); }
+.mag-stats { border-top-color: rgba(18,48,61,.12); border-bottom-color: rgba(18,48,61,.12); }
+.mag-stat strong { color: var(--coral-dark); }
+.mag-stat span { color: var(--muted); }
+
+/* ============================================================
+   Brand palette from the logo — sky BLUE (primary) + leaf GREEN
+   (secondary). Blue lives in the tokens (buttons, links, headings
+   accents). Green takes over the kicker/eyebrow labels and the
+   story-zone accents that used to be gold.
+   ============================================================ */
+
+/* Green becomes the "label" color site-wide (kickers, eyebrows) */
+.about-hero-kicker,
+.abt-hero .about-hero-kicker,
+.mag-hero .about-hero-kicker { color: var(--green-soft); }
+.about-hero h1 em { color: var(--green-soft); }
+.section-label { color: var(--green-dark); }
+.section-label > span:first-child { color: var(--green); }
+.label-rule { background: var(--green); }
+.eyebrow { color: var(--green-dark); }
+.eyebrow-line { background: var(--green); }
+.story-kicker { color: var(--green-dark); }
+.hh-copy .story-kicker,
+.inner-page:has(.principles-grid) .hh-about-lead .story-kicker { color: var(--green-dark); }
+
+/* Healing History story zone: gold accents → green */
+.hh-eyebrow { color: var(--green-dark); }
+.hh-eyebrow::before { background: var(--green); }
+.hh-pill { background: rgba(125,153,59,.16); color: var(--green-dark); }
+.hh-narrative-rule { background: var(--green); }
+.hh-pull { border-left-color: var(--green); }
+.hh-timeline::before { background: linear-gradient(90deg, var(--green-soft), var(--green)); }
+.hh-timeline li::before { background: var(--green); box-shadow: 0 0 0 4px rgba(125,153,59,.20); }
+.hh-callout-quote { border-left-color: var(--green); background: rgba(125,153,59,.10); color: #4b5a2c; }
+.hh-callout-quote-strong { background: rgba(125,153,59,.15); }
+.hh-readmore { color: var(--green-dark); }
+.hh-readmore:hover { color: #47591f; }
+.hh-why-icon { background: rgba(125,153,59,.12); color: var(--green-dark); }
+.hh-how-icon { color: var(--green-soft); }
+.hh-howbox .hh-eyebrow { color: var(--green-soft); }
+.hh-howbox .hh-eyebrow::before { background: var(--green-soft); }
+.hh-parallax cite { color: var(--green-soft); }
+
+/* Activities cards: gold number/border → green */
+.hh-act-num { color: var(--green-dark); }
+.hh-act-icon { background: rgba(125,153,59,.12); color: var(--green-dark); }
+.inner-page:has(.principles-grid):not(:has(.principles-heading)) .hh-activities .principle { border-top-color: var(--green); }

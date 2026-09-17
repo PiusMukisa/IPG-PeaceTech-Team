@@ -421,6 +421,52 @@ document.querySelectorAll('.donate-toggle').forEach((btn) => {
   if (!dismissed) setTimeout(() => setOpen(true), 1400);
 })();
 
+// Expand cards (home "our work" projects): compact card opens a wide modal
+document.querySelectorAll('[data-expand-modal]').forEach((modal) => {
+  const body = modal.querySelector('.expand-modal-body');
+  const panel = modal.querySelector('.expand-modal-panel');
+  const closeBtn = modal.querySelector('.expand-modal-close');
+  let lastFocused = null;
+
+  const open = (card) => {
+    const tpl = card.querySelector('.welcome-project-full');
+    if (!tpl || !body) return;
+    lastFocused = document.activeElement;
+    body.innerHTML = '';
+    body.appendChild(tpl.content.cloneNode(true));
+    if (panel) panel.scrollTop = 0;
+    modal.hidden = false;
+    document.body.style.overflow = 'hidden';
+    closeBtn?.focus();
+  };
+  const close = () => {
+    modal.hidden = true;
+    body.innerHTML = '';
+    document.body.style.overflow = '';
+    if (lastFocused && typeof lastFocused.focus === 'function') lastFocused.focus();
+  };
+
+  document.querySelectorAll('[data-expand-card]').forEach((card) => {
+    card.addEventListener('click', (event) => {
+      if (event.target.closest('a')) return;
+      open(card);
+    });
+    card.addEventListener('keydown', (event) => {
+      if (event.key === 'Enter' || event.key === ' ') {
+        event.preventDefault();
+        open(card);
+      }
+    });
+  });
+
+  modal.addEventListener('click', (event) => {
+    if (event.target.closest('[data-close]')) close();
+  });
+  document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape' && !modal.hidden) close();
+  });
+});
+
 // Healing History "Why we started" cards: inline read-more toggle
 document.querySelectorAll('.hh-readmore').forEach((btn) => {
   const more = document.getElementById(btn.getAttribute('aria-controls'));
