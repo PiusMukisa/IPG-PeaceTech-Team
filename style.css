@@ -1912,3 +1912,123 @@ body:has(.home-about) .board-preview-btn:hover { background: linear-gradient(90d
 .dip-inquire { background: var(--ink-deep); color: #fff; text-align: center; }
 .dip-beauty { max-width: 780px; margin: 0 auto 38px; font: 500 clamp(23px, 2.9vw, 36px)/1.28 var(--display); color: #fff; }
 .dip-inquire-foot p { margin: 0 0 24px; color: #c3d3d9; font-size: 16px; line-height: 1.6; }
+
+/* ============================================================
+   Healing History — story-zone redesign
+   Warm-cream island on the dark project canvas: why-we-started
+   strip, reusable program component (used twice), how-we-work
+   callout, parallax band, restyled 3-activities cards.
+   ============================================================ */
+
+/* Shared eyebrow + label pill */
+.hh-eyebrow { display: inline-flex; align-items: center; gap: 10px; margin-bottom: 14px; color: #b06f2e; text-transform: uppercase; letter-spacing: .16em; font-size: 11px; font-weight: 700; }
+.hh-eyebrow::before { content: ""; width: 26px; height: 2px; background: #d99a5b; border-radius: 2px; }
+.hh-pill { display: inline-block; margin-bottom: 16px; padding: 7px 15px; border-radius: 999px; background: rgba(217,154,91,.16); color: #a5641f; text-transform: uppercase; letter-spacing: .13em; font-size: 11px; font-weight: 700; }
+
+/* Origin lead */
+.hh-origin { max-width: 820px; margin: 0 auto; text-align: center; }
+.hh-origin-lead { margin: 0 0 20px; color: #4b4038; font: 400 clamp(18px,1.9vw,21px)/1.7 var(--body); }
+.hh-origin-quote { margin: 0 auto 22px; max-width: 780px; color: #5a4632; font: italic 500 clamp(21px,2.5vw,29px)/1.5 var(--display); }
+.hh-origin-follow { margin: 0; color: #6a5540; font-size: 17px; line-height: 1.8; }
+
+/* 1. Why we started — 3 cards */
+.hh-why { margin: 66px auto 0; max-width: 1000px; text-align: center; }
+.hh-why-title { margin: 0 0 34px; color: #14556e; font: 500 clamp(24px,2.6vw,32px)/1.2 var(--display); }
+.hh-why-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; text-align: left; }
+.hh-why-card { display: flex; flex-direction: column; padding: 30px 26px 26px; background: #fdf9f0; border: 1px solid rgba(75,64,56,.12); border-radius: 18px; box-shadow: 0 14px 30px rgba(74,53,32,.10); }
+.hh-why-icon { display: grid; place-items: center; width: 52px; height: 52px; margin-bottom: 18px; border-radius: 14px; background: rgba(20,85,110,.09); color: #1a5f79; }
+.hh-why-icon svg { width: 26px; height: 26px; }
+.hh-why-take { margin: 0; color: #3f362e; font: 500 17px/1.55 var(--body); }
+.hh-readmore { align-self: flex-start; margin-top: 16px; padding: 0; border: 0; background: none; color: #b06f2e; font: 700 13px var(--body); letter-spacing: .02em; cursor: pointer; display: inline-flex; align-items: center; gap: 7px; }
+.hh-readmore::after { content: "+"; font-size: 15px; line-height: 1; }
+.hh-readmore[aria-expanded="true"]::after { content: "\2013"; }
+.hh-readmore:hover { color: #8a5316; }
+.hh-why-more { margin-top: 14px; }
+.hh-why-more[hidden] { display: none; }
+.hh-why-more p { margin: 0; color: #6a5540; font-size: 14.5px; line-height: 1.72; }
+
+/* 2. Program component (reused for Europe and Israel/Palestine) */
+.hh-program { margin: 80px auto 0; }
+.hh-program-title { margin: 0 0 16px; color: #14556e; font: 500 clamp(26px,3vw,40px)/1.12 var(--display); letter-spacing: -.01em; }
+.hh-program-intro { max-width: 780px; margin: 0 0 40px; color: #584b40; font-size: 17px; line-height: 1.8; }
+
+/* Horizontal timeline */
+.hh-timeline { position: relative; display: grid; grid-auto-flow: column; grid-auto-columns: 1fr; gap: 20px; list-style: none; margin: 0 0 46px; padding: 26px 0 0; }
+.hh-timeline::before { content: ""; position: absolute; top: 32px; left: 6px; right: 6px; height: 2px; background: linear-gradient(90deg, #e0c49f, #d99a5b); }
+.hh-timeline li { position: relative; padding-top: 26px; }
+.hh-timeline li::before { content: ""; position: absolute; top: 6px; left: 0; width: 13px; height: 13px; border-radius: 50%; background: #d99a5b; box-shadow: 0 0 0 4px rgba(217,154,91,.20); }
+.hh-tl-year { display: block; color: #1a5f79; font: 600 20px var(--display); text-transform: capitalize; }
+.hh-tl-label { display: block; margin-top: 5px; color: #6a5540; font-size: 13.5px; line-height: 1.5; }
+
+/* Alternating image / text rows (same 4:3 aspect throughout) */
+.hh-alt-row { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: center; margin-bottom: 40px; }
+.hh-alt-media { margin: 0; border-radius: 16px; overflow: hidden; aspect-ratio: 4 / 3; box-shadow: 0 16px 34px rgba(74,53,32,.22); }
+.hh-alt-media img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.hh-alt-row.reverse .hh-alt-media { order: 2; }
+.hh-alt-copy p { margin: 0 0 15px; color: #4f4339; font-size: 16px; line-height: 1.8; }
+.hh-alt-copy p:last-child { margin-bottom: 0; }
+
+/* Pull-quote callout */
+.hh-callout-quote { position: relative; margin: 8px 0 44px; padding: 26px 30px 26px 34px; border-left: 4px solid #d99a5b; border-radius: 0 16px 16px 0; background: rgba(217,154,91,.10); color: #5a4632; font: italic 500 clamp(20px,2.3vw,27px)/1.5 var(--display); }
+.hh-callout-quote-strong { background: rgba(217,154,91,.15); }
+
+/* Stat strip */
+.hh-stats { display: grid; grid-auto-flow: column; grid-auto-columns: 1fr; padding: 30px 20px; border: 1px solid rgba(75,64,56,.14); border-radius: 18px; background: #fdf9f0; }
+.hh-stats > div { text-align: center; padding: 0 18px; }
+.hh-stats > div + div { border-left: 1px solid rgba(75,64,56,.12); }
+.hh-stats strong { display: block; color: #14556e; font: 600 clamp(28px,3.4vw,44px)/1 var(--display); }
+.hh-stats span { display: block; margin-top: 8px; color: #6a5540; font-size: 12.5px; line-height: 1.4; }
+
+/* 3. How we work — teal callout box */
+.hh-howwework { margin: 80px auto 0; }
+.hh-howbox { display: grid; grid-template-columns: auto 1fr; gap: 30px; align-items: start; padding: 40px clamp(26px,4vw,48px); border-radius: 22px; background: linear-gradient(135deg, #153f52, #1a5f79); color: #eaf3f6; box-shadow: 0 22px 50px rgba(15,63,82,.30); }
+.hh-how-icon { display: grid; place-items: center; width: 64px; height: 64px; border-radius: 18px; background: rgba(255,255,255,.10); color: #e7c49b; }
+.hh-how-icon svg { width: 34px; height: 34px; }
+.hh-howbox .hh-eyebrow { color: #e7c49b; }
+.hh-howbox .hh-eyebrow::before { background: #e7c49b; }
+.hh-how-body h3 { margin: 0 0 14px; color: #fff; font: 500 clamp(24px,2.7vw,34px)/1.15 var(--display); }
+.hh-how-body p { margin: 0 0 14px; color: #d4e3e8; font-size: 16px; line-height: 1.8; }
+.hh-how-body p:last-child { margin-bottom: 0; }
+.hh-how-note { font-size: 13px; color: #9fc0cc; }
+
+/* Parallax band (full-bleed background image, Ambuja-style scroll) */
+.hh-parallax { position: relative; width: 100vw; margin: 84px 0 0; margin-left: calc(50% - 50vw); min-height: 60vh; display: grid; place-items: center; background-color: #12303d; background-size: cover; background-position: center; background-repeat: no-repeat; background-attachment: fixed; }
+.hh-parallax::before { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(13,35,45,.62), rgba(13,31,41,.80)); }
+.hh-parallax-inner { position: relative; z-index: 1; max-width: 820px; padding: 84px 24px; text-align: center; }
+.hh-parallax blockquote { margin: 0; color: #fff; font: 500 clamp(24px,3.4vw,44px)/1.28 var(--display); text-wrap: balance; }
+.hh-parallax cite { display: block; margin-top: 20px; color: #e7c49b; font-style: normal; font-size: 12px; letter-spacing: .16em; text-transform: uppercase; }
+
+/* 4. "3 main activities" — cream band + icons (keep 01/02/03 layout) */
+.hh-activities { background: linear-gradient(180deg, #f4e9d7, #efe0c9); }
+.hh-activities .section-heading h2 { color: #14556e; }
+.hh-activities .principles-grid { gap: 24px; }
+.hh-act-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 18px; }
+.hh-act-num { color: #b06f2e; font: 700 14px var(--display); letter-spacing: .12em; }
+.hh-act-icon { display: grid; place-items: center; width: 48px; height: 48px; border-radius: 13px; background: rgba(20,85,110,.10); color: #1a5f79; }
+.hh-act-icon svg { width: 24px; height: 24px; }
+/* Beat the dark-canvas overrides (guarded selector = higher specificity) */
+.inner-page:has(.principles-grid):not(:has(.principles-heading)) .hh-activities .principle { display: flex; flex-direction: column; min-height: auto; padding: 30px 26px 28px; background: #fdf9f0; color: #4b4038; border-top: 3px solid #d99a5b; border-radius: 16px; box-shadow: 0 14px 30px rgba(74,53,32,.12); }
+.inner-page:has(.principles-grid):not(:has(.principles-heading)) .hh-activities .principle h3 { margin: 0 0 12px; color: #14556e; }
+.inner-page:has(.principles-grid):not(:has(.principles-heading)) .hh-activities .principle p { color: #6a5540; }
+
+/* Responsive */
+@media (max-width: 900px) {
+  .hh-why-grid { grid-template-columns: 1fr; }
+  .hh-alt-row, .hh-alt-row.reverse { grid-template-columns: 1fr; gap: 24px; }
+  .hh-alt-row.reverse .hh-alt-media { order: 0; }
+  .hh-timeline { grid-auto-flow: row; grid-auto-columns: auto; gap: 0; padding-top: 0; }
+  .hh-timeline::before { top: 0; bottom: 0; left: 6px; right: auto; width: 2px; height: auto; background: linear-gradient(180deg, #e0c49f, #d99a5b); }
+  .hh-timeline li { padding: 0 0 22px 30px; }
+  .hh-timeline li:last-child { padding-bottom: 0; }
+  .hh-timeline li::before { top: 3px; left: 0; }
+  .hh-stats { grid-auto-flow: row; grid-auto-columns: auto; padding: 8px 20px; }
+  .hh-stats > div { padding: 18px 0; }
+  .hh-stats > div + div { border-left: 0; border-top: 1px solid rgba(75,64,56,.12); }
+  .hh-howbox { grid-template-columns: 1fr; gap: 20px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hh-parallax { background-attachment: scroll; }
+}
+@media (max-width: 820px) {
+  .hh-parallax { background-attachment: scroll; min-height: 46vh; }
+}

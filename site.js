@@ -421,6 +421,24 @@ document.querySelectorAll('.donate-toggle').forEach((btn) => {
   if (!dismissed) setTimeout(() => setOpen(true), 1400);
 })();
 
+// Healing History "Why we started" cards: inline read-more toggle
+document.querySelectorAll('.hh-readmore').forEach((btn) => {
+  const more = document.getElementById(btn.getAttribute('aria-controls'));
+  const label = btn.querySelector('span');
+  if (!more) return;
+  btn.addEventListener('click', () => {
+    const open = btn.getAttribute('aria-expanded') === 'true';
+    btn.setAttribute('aria-expanded', String(!open));
+    if (open) {
+      more.setAttribute('hidden', '');
+      if (label) label.textContent = 'Read more';
+    } else {
+      more.removeAttribute('hidden');
+      if (label) label.textContent = 'Read less';
+    }
+  });
+});
+
 // Founder "Read more" opens a wide bio modal (About page)
 document.querySelectorAll('.read-more-btn[data-modal]').forEach((btn) => {
   const modal = document.getElementById(btn.dataset.modal + '-modal');
