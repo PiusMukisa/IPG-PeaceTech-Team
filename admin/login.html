@@ -84,7 +84,8 @@
         width: 94px;
         height: 94px;
         border-radius: 22px;
-        background: linear-gradient(135deg, var(--primary-blue), #2c7fe6);
+        overflow: hidden;
+        background: var(--white);
         box-shadow: 0 14px 28px rgba(0, 87, 183, 0.18);
         display: flex;
         align-items: center;
@@ -93,28 +94,11 @@
         position: relative;
       }
 
-      .brand-mark::before {
-        content: "";
-        width: 44px;
-        height: 44px;
-        border: 4px solid var(--white);
-        border-radius: 50%;
+      .brand-mark img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
         display: block;
-        border-top-color: transparent;
-        transform: rotate(18deg);
-        position: absolute;
-      }
-
-      .brand-mark::after {
-        content: "";
-        position: absolute;
-        width: 18px;
-        height: 18px;
-        background: var(--accent-yellow);
-        border-radius: 50%;
-        bottom: 15px;
-        right: 18px;
-        box-shadow: 0 0 0 6px rgba(255, 215, 0, 0.18);
       }
 
       .eyebrow {
@@ -407,7 +391,9 @@
       <aside class="brand-panel" aria-label="Organization overview">
         <div class="brand-content">
           <div class="eyebrow">International Peace Group | Peace is a practice</div>
-          <div class="brand-mark" aria-hidden="true"></div>
+          <div class="brand-mark" aria-label="International Peace Group logo">
+            <img src="https://www.internationalpeacegroup.com/wp-content/uploads/2016/10/cropped-IPG-Logo-1.jpg" alt="International Peace Group logo" />
+          </div>
 
           <h1>Support. Protection. Recovery.</h1>
           <p class="brand-copy">
@@ -515,6 +501,7 @@
           try {
             const response = await fetch('/api/auth/request-code', {
               method: 'POST',
+              cache: 'no-store',
               headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify({ email }),
             });
@@ -541,6 +528,7 @@
         try {
           const response = await fetch('/api/auth/verify-code', {
             method: 'POST',
+            cache: 'no-store',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ email, code }),
           });
@@ -551,7 +539,8 @@
             throw new Error(result.error || 'Verification failed.');
           }
 
-          window.location.href = '/admin/dashboard';
+          const dashboardUrl = `/admin/dashboard?_t=${Date.now()}`;
+          window.location.replace(dashboardUrl);
         } catch (error) {
           showNotice(error.message, 'error');
         }

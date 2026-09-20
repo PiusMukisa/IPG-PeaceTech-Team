@@ -4,6 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>IPG Admin Dashboard</title>
+    <meta name="dashboard-version" content="2026-09-20">
     <style>
       :root {
         --primary-blue: #0057B7;
@@ -47,14 +48,33 @@
       .sidebar {
         position: sticky;
         top: 0;
-        width: 248px;
+        flex: 0 0 clamp(200px, 20vw, 248px);
+        width: clamp(200px, 20vw, 248px);
+        min-width: 200px;
+        max-width: 248px;
         height: 100vh;
+        overflow-y: auto;
+        overflow-x: hidden;
+        scrollbar-gutter: stable;
         background: linear-gradient(180deg, var(--sidebar-bg) 0%, #122544 100%);
         color: rgba(255,255,255,0.9);
         display: flex;
         flex-direction: column;
         padding: 22px 18px 18px;
         border-right: 1px solid rgba(255,255,255,0.06);
+      }
+
+      .sidebar::-webkit-scrollbar {
+        width: 8px;
+      }
+
+      .sidebar::-webkit-scrollbar-track {
+        background: rgba(255,255,255,0.04);
+      }
+
+      .sidebar::-webkit-scrollbar-thumb {
+        background: rgba(255,255,255,0.18);
+        border-radius: 999px;
       }
 
       .brand-block {
@@ -69,30 +89,19 @@
         width: 36px;
         height: 36px;
         border-radius: 12px;
-        background: linear-gradient(135deg, var(--primary-blue), #2a7fe8);
-        position: relative;
+        overflow: hidden;
+        background: var(--white);
         box-shadow: inset 0 0 0 1px rgba(255,255,255,0.14);
+        display: flex;
+        align-items: center;
+        justify-content: center;
       }
 
-      .brand-badge::before {
-        content: "";
-        position: absolute;
-        inset: 9px;
-        border-radius: 50%;
-        border: 3px solid rgba(255,255,255,0.85);
-        border-top-color: transparent;
-        transform: rotate(18deg);
-      }
-
-      .brand-badge::after {
-        content: "";
-        position: absolute;
-        width: 9px;
-        height: 9px;
-        background: var(--accent-yellow);
-        border-radius: 50%;
-        right: 6px;
-        bottom: 7px;
+      .brand-badge img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
       }
 
       .brand-meta {
@@ -128,13 +137,46 @@
         color: rgba(255,255,255,0.8);
         font-size: 0.95rem;
         font-weight: 600;
-        transition: background 0.2s ease, color 0.2s ease;
+        transition: background 0.2s ease, color 0.2s ease, transform 0.2s ease;
+        cursor: pointer;
       }
 
-      .nav-item.active {
+      .nav-item:hover,
+      .drawer-item:hover {
+        transform: translateX(2px);
+      }
+
+      .nav-item.active,
+      .drawer-item.active {
         background: rgba(0, 87, 183, 0.22);
         color: var(--white);
         box-shadow: inset 0 0 0 1px rgba(255,255,255,0.04);
+      }
+
+      .nav-submenu {
+        display: none;
+        margin-top: 6px;
+        padding-left: 12px;
+        gap: 6px;
+      }
+
+      .nav-submenu.open {
+        display: grid;
+      }
+
+      .nav-item.has-parent {
+        position: relative;
+      }
+
+      .nav-item.has-parent::after {
+        content: "▾";
+        margin-left: auto;
+        font-size: 0.8rem;
+        opacity: 0.75;
+      }
+
+      .nav-item.has-parent.is-open::after {
+        content: "▴";
       }
 
       .nav-icon {
@@ -304,9 +346,104 @@
         padding: 28px;
       }
 
+      .dashboard-hero {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 20px;
+        padding: 6px 0 22px;
+      }
+
+      .dashboard-heading {
+        display: grid;
+        gap: 8px;
+      }
+
+      .eyebrow {
+        margin: 0;
+        color: var(--primary-blue);
+        text-transform: uppercase;
+        letter-spacing: 0.12em;
+        font-size: 0.72rem;
+        font-weight: 800;
+      }
+
+      .dashboard-heading h2 {
+        margin: 0;
+        font-size: clamp(2rem, 2vw, 2.5rem);
+        letter-spacing: -0.05em;
+      }
+
+      .dashboard-heading p {
+        margin: 0;
+        color: var(--muted);
+        font-size: 1rem;
+        max-width: 760px;
+      }
+
+      .dashboard-controls {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+        gap: 12px;
+        min-width: min(440px, 48vw);
+      }
+
+      .segmented-group {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: flex-end;
+        gap: 8px;
+        padding: 6px;
+        border-radius: 14px;
+        background: #f3f7ff;
+        border: 1px solid rgba(0, 87, 183, 0.08);
+      }
+
+      .range-chip {
+        border: none;
+        background: transparent;
+        color: var(--muted);
+        border-radius: 10px;
+        padding: 8px 12px;
+        font-weight: 700;
+        cursor: pointer;
+      }
+
+      .range-chip.active {
+        background: var(--white);
+        color: var(--primary-blue);
+        box-shadow: 0 4px 12px rgba(0, 87, 183, 0.08);
+      }
+
+      .filter-select {
+        width: min(320px, 100%);
+        display: grid;
+        gap: 6px;
+        color: var(--muted);
+        font-size: 0.74rem;
+        font-weight: 700;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+      }
+
+      .filter-select select {
+        width: 100%;
+        min-height: 42px;
+        border-radius: 12px;
+        border: 1px solid var(--border);
+        background: var(--white);
+        color: var(--navy);
+        padding: 0 12px;
+        font: inherit;
+        font-weight: 600;
+        letter-spacing: normal;
+        text-transform: none;
+      }
+
       .stats-grid {
         display: grid;
-        grid-template-columns: repeat(4, minmax(0, 1fr));
+        grid-template-columns: repeat(6, minmax(0, 1fr));
         gap: 18px;
       }
 
@@ -316,6 +453,14 @@
         border-radius: 18px;
         box-shadow: var(--shadow);
         padding: 18px 18px 16px;
+        position: relative;
+        cursor: pointer;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+      }
+
+      .stat-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 18px 32px rgba(15, 23, 42, 0.08);
       }
 
       .stat-row {
@@ -362,6 +507,165 @@
       .up {
         color: #0f9f6e;
         font-weight: 700;
+      }
+
+      .down {
+        color: #d92d20;
+        font-weight: 700;
+      }
+
+      .impact-map-section {
+        margin-top: 22px;
+      }
+
+      .map-layout {
+        display: grid;
+        grid-template-columns: minmax(0, 1.8fr) minmax(220px, 0.9fr);
+        gap: 20px;
+        align-items: stretch;
+      }
+
+      .map-panel {
+        border: 1px solid var(--border);
+        border-radius: 18px;
+        background: linear-gradient(180deg, #f6faff 0%, #eef5ff 100%);
+        padding: 14px;
+      }
+
+      .map-surface {
+        position: relative;
+        min-height: 340px;
+        border-radius: 16px;
+        overflow: hidden;
+        background: linear-gradient(160deg, rgba(231, 240, 255, 0.95), rgba(255,255,255,0.9));
+        border: 1px solid rgba(0, 87, 183, 0.08);
+      }
+
+      .map-surface svg {
+        width: 100%;
+        height: 100%;
+        display: block;
+      }
+
+      .ukraine-map {
+        width: 100%;
+        height: 100%;
+        min-height: 320px;
+        display: block;
+      }
+
+      .ukraine-map .feature {
+        transition: fill 0.2s ease, filter 0.2s ease, stroke 0.2s ease, opacity 0.2s ease;
+        cursor: pointer;
+        stroke: rgba(255,255,255,0.92);
+        stroke-width: 1.1;
+      }
+
+      .ukraine-map .feature:hover,
+      .ukraine-map .feature.is-selected {
+        filter: brightness(1.04);
+        stroke: rgba(0, 87, 183, 0.9);
+        stroke-width: 2.5;
+        opacity: 1;
+      }
+
+      .map-tooltip {
+        position: absolute;
+        left: 0;
+        top: 0;
+        transform: translate(-50%, -110%);
+        background: rgba(15, 23, 42, 0.94);
+        color: #fff;
+        border-radius: 10px;
+        padding: 8px 10px;
+        font-size: 0.72rem;
+        line-height: 1.5;
+        pointer-events: none;
+        white-space: nowrap;
+        box-shadow: 0 10px 24px rgba(15, 23, 42, 0.18);
+        opacity: 0;
+        transition: opacity 0.14s ease;
+        z-index: 20;
+      }
+
+      .map-tooltip.visible {
+        opacity: 1;
+      }
+
+      .map-label {
+        font-size: 12px;
+        font-weight: 700;
+        fill: #143765;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+      }
+
+      .map-legend {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px 18px;
+        margin-top: 12px;
+        color: var(--muted);
+        font-size: 0.78rem;
+        font-weight: 600;
+      }
+
+      .legend-item {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .legend-swatch {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+      }
+
+      .legend-swatch.reached { background: #1c8a6f; }
+      .legend-swatch.no-activity { background: #dfe8f2; }
+      .legend-swatch.active { background: #0057B7; }
+      .legend-swatch.project { background: #f5b700; }
+
+      .selection-card {
+        background: var(--white);
+        border: 1px solid var(--border);
+        border-radius: 18px;
+        box-shadow: var(--shadow);
+        padding: 18px;
+      }
+
+      .selection-card h4 {
+        margin: 0 0 14px;
+        font-size: 1.05rem;
+        letter-spacing: -0.02em;
+      }
+
+      .detail-list {
+        display: grid;
+        gap: 10px;
+      }
+
+      .detail-row {
+        display: grid;
+        grid-template-columns: 1fr auto;
+        gap: 12px;
+        padding: 8px 0;
+        border-bottom: 1px solid var(--border);
+      }
+
+      .detail-row:last-child {
+        border-bottom: none;
+      }
+
+      .detail-row span {
+        color: var(--muted);
+        font-size: 0.78rem;
+        font-weight: 700;
+      }
+
+      .detail-row strong {
+        font-size: 0.88rem;
       }
 
       .content-grid {
@@ -605,8 +909,119 @@
         color: var(--primary-blue);
       }
 
+      .project-form,
+      .impact-form,
+      .content-form {
+        display: grid;
+        gap: 12px;
+        margin-top: 18px;
+      }
+
+      .form-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 12px;
+      }
+
+      .project-form label,
+      .impact-form label,
+      .content-form label {
+        display: grid;
+        gap: 6px;
+        color: var(--muted);
+        font-size: 0.78rem;
+        font-weight: 700;
+      }
+
+      .project-form input,
+      .project-form textarea,
+      .project-form select,
+      .impact-form input,
+      .impact-form textarea,
+      .impact-form select,
+      .content-form input,
+      .content-form textarea,
+      .content-form select {
+        width: 100%;
+        border: 1px solid var(--border);
+        background: #f9fbff;
+        border-radius: 10px;
+        padding: 10px 12px;
+        font: inherit;
+        color: var(--navy);
+      }
+
+      .project-form textarea,
+      .impact-form textarea,
+      .content-form textarea {
+        min-height: 90px;
+        resize: vertical;
+      }
+
+      .submit-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+      }
+
+      .status-text {
+        min-height: 18px;
+        font-size: 0.78rem;
+        font-weight: 700;
+      }
+
+      .status-text.success {
+        color: #0d8b5d;
+      }
+
+      .status-text.error {
+        color: #b42318;
+      }
+
+      .impact-list {
+        display: grid;
+        gap: 10px;
+        margin-top: 12px;
+      }
+
+      .impact-item {
+        padding: 10px 12px;
+        border-radius: 12px;
+        background: #f8fbff;
+        border: 1px solid var(--border);
+      }
+
+      .impact-item strong {
+        display: block;
+        margin-bottom: 4px;
+      }
+
       .mobile-header, .mobile-drawer, .mobile-nav, .drawer-backdrop {
         display: none;
+      }
+
+      @media (max-width: 1280px) {
+        .sidebar {
+          flex-basis: 220px;
+          width: 220px;
+          min-width: 220px;
+          max-width: 220px;
+        }
+      }
+
+      @media (max-width: 1180px) {
+        .stats-grid {
+          grid-template-columns: repeat(3, minmax(0, 1fr));
+        }
+
+        .content-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .lower-grid {
+          grid-template-columns: 1fr;
+        }
       }
 
       @media (max-width: 1023px) {
@@ -632,6 +1047,35 @@
 
         .content-grid,
         .lower-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      @media (max-width: 720px) {
+        .stats-grid {
+          grid-template-columns: 1fr 1fr;
+        }
+
+        .topbar-actions {
+          gap: 10px;
+        }
+
+        .search-box {
+          max-width: 200px;
+        }
+      }
+
+      @media (max-width: 560px) {
+        .page-content {
+          padding: 14px;
+        }
+
+        .stats-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .quick-actions,
+        .form-grid {
           grid-template-columns: 1fr;
         }
       }
@@ -839,38 +1283,6 @@
           font-size: 0.8rem;
         }
 
-        .footer-nav {
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-          gap: 8px;
-          position: fixed;
-          left: 12px;
-          right: 12px;
-          bottom: 12px;
-          padding: 10px 8px;
-          border-radius: 16px;
-          background: rgba(255,255,255,0.94);
-          border: 1px solid var(--border);
-          box-shadow: 0 14px 28px rgba(15,23,42,0.12);
-          z-index: 25;
-        }
-
-        .foot-item {
-          flex: 1;
-          text-align: center;
-          color: var(--muted);
-          font-size: 0.74rem;
-          font-weight: 700;
-          padding: 8px 6px;
-          border-radius: 10px;
-        }
-
-        .foot-item.active {
-          color: var(--primary-blue);
-          background: rgba(0, 87, 183, 0.08);
-        }
-
         .drawer-backdrop {
           position: fixed;
           inset: 0;
@@ -955,7 +1367,9 @@
     <div class="app-shell">
       <aside class="sidebar" aria-label="Main navigation">
         <div class="brand-block">
-          <div class="brand-badge" aria-hidden="true"></div>
+          <div class="brand-badge" aria-label="International Peace Group logo">
+            <img src="https://www.internationalpeacegroup.com/wp-content/uploads/2016/10/cropped-IPG-Logo-1.jpg" alt="International Peace Group logo" />
+          </div>
           <div class="brand-meta">
             <span class="brand-name">International Peace Group</span>
             <span class="brand-sub">Aid operations portal</span>
@@ -964,27 +1378,53 @@
 
         <nav class="nav" aria-label="Sidebar navigation">
           <div class="nav-item active"><span class="nav-icon">▣</span> Dashboard</div>
-          <div class="nav-item"><span class="nav-icon">◎</span> Beneficiaries</div>
-          <div class="nav-item"><span class="nav-icon">◫</span> Aid Programs</div>
-          <div class="nav-item"><span class="nav-icon">◍</span> Donations</div>
-          <div class="nav-item"><span class="nav-icon">▦</span> Projects</div>
-          <div class="nav-item"><span class="nav-icon">◌</span> Volunteers</div>
-          <div class="nav-item"><span class="nav-icon">◈</span> Partners</div>
-          <div class="nav-item"><span class="nav-icon">▤</span> Reports</div>
-          <div class="nav-item"><span class="nav-icon">✉</span> Messages</div>
+
+          <div class="nav-item has-parent"><span class="nav-icon">◫</span> Website</div>
+          <div class="nav-submenu" aria-label="Website section">
+            <div class="nav-item"><span class="nav-icon">▤</span> Pages</div>
+            <div class="nav-item"><span class="nav-icon">◌</span> Posts &amp; Stories</div>
+            <div class="nav-item"><span class="nav-icon">★</span> Projects</div>
+            <div class="nav-item"><span class="nav-icon">◍</span> Testimonials</div>
+            <div class="nav-item"><span class="nav-icon">▣</span> Events</div>
+            <div class="nav-item"><span class="nav-icon">◈</span> Media Library</div>
+            <div class="nav-item"><span class="nav-icon">◎</span> Navigation</div>
+          </div>
+
+          <div class="nav-item has-parent"><span class="nav-icon">◎</span> Impact</div>
+          <div class="nav-submenu" aria-label="Impact section">
+            <div class="nav-item"><span class="nav-icon">▦</span> Impact Overview</div>
+            <div class="nav-item"><span class="nav-icon">◍</span> Aid/Support Records</div>
+            <div class="nav-item"><span class="nav-icon">◌</span> Beneficiaries</div>
+            <div class="nav-item"><span class="nav-icon">▤</span> Locations</div>
+            <div class="nav-item"><span class="nav-icon">✦</span> Impact Reports</div>
+          </div>
+
+          <div class="nav-item has-parent"><span class="nav-icon">◉</span> Team</div>
+          <div class="nav-submenu" aria-label="Team section">
+            <div class="nav-item"><span class="nav-icon">👥</span> Team Members</div>
+            <div class="nav-item"><span class="nav-icon">▣</span> Users</div>
+            <div class="nav-item"><span class="nav-icon">⚑</span> Roles &amp; Permissions</div>
+            <div class="nav-item"><span class="nav-icon">✉</span> Activity Log</div>
+          </div>
+
+          <div class="nav-item has-parent"><span class="nav-icon">⚙</span> System</div>
+          <div class="nav-submenu" aria-label="System section">
+            <div class="nav-item"><span class="nav-icon">▤</span> Settings</div>
+            <div class="nav-item"><span class="nav-icon">◫</span> Website Settings</div>
+            <div class="nav-item"><span class="nav-icon">🔔</span> Notifications</div>
+          </div>
         </nav>
 
         <div class="nav-group">
-          <div class="nav-item"><span class="nav-icon">⚙</span> Settings</div>
-          <div class="nav-item"><span class="nav-icon">?</span> Help &amp; Support</div>
+          <div class="nav-item"><span class="nav-icon">↵</span> Logout</div>
         </div>
 
         <div class="profile-box">
           <div class="profile-row">
-            <div class="avatar">AS</div>
+            <div class="avatar" id="sidebarAvatar">AD</div>
             <div>
-              <div class="profile-name">Alicia Stone</div>
-              <div class="profile-role">Administrator</div>
+              <div class="profile-name" id="sidebarName">Administrator</div>
+              <div class="profile-role" id="sidebarRole">Super Administrator</div>
             </div>
           </div>
         </div>
@@ -1004,15 +1444,15 @@
             </label>
 
             <button class="icon-button" aria-label="Notifications">
-              🔔
+              Alerts
               <span class="dot"></span>
             </button>
 
             <div class="user-chip">
-              <div class="avatar">AS</div>
+              <div class="avatar" id="topbarAvatar">AD</div>
               <div>
-                <div style="font-weight:700; font-size:0.82rem;">Alicia</div>
-                <div style="font-size:0.72rem; color:var(--muted);">Administrator</div>
+                <div style="font-weight:700; font-size:0.82rem;" id="topbarName">Admin</div>
+                <div style="font-size:0.72rem; color:var(--muted);" id="topbarRole">Super Administrator</div>
               </div>
             </div>
           </div>
@@ -1027,53 +1467,139 @@
           <div class="mobile-title">Dashboard</div>
 
           <div class="mob-right">
-            <button class="icon-button bell" aria-label="Notifications">🔔</button>
-            <div class="mob-avatar">AS</div>
+            <button class="icon-button bell" aria-label="Notifications">Alerts</button>
+            <div class="mob-avatar">AD</div>
           </div>
         </div>
 
         <div class="page-content">
-          <div class="welcome" style="display:none;">
-            <h2>Good morning, Administrator</h2>
-            <p>Here's an overview of today's activities.</p>
-          </div>
+          <section class="dashboard-hero">
+            <div class="dashboard-heading">
+              <p class="eyebrow">Dashboard Home</p>
+              <h2>Good morning, Admin</h2>
+              <p>Here's an overview of International Peace Group's activities and impact.</p>
+            </div>
 
-          <section class="stats-grid" aria-label="Administrative statistics">
-            <article class="stat-card">
-              <div class="stat-row">
-                <span class="stat-label">Active Aid Programs</span>
-                <span class="stat-pill">◎</span>
+            <div class="dashboard-controls">
+              <div class="segmented-group" aria-label="Date range selector">
+                <button class="range-chip active" type="button" data-range="today">Today</button>
+                <button class="range-chip" type="button" data-range="this_week">This Week</button>
+                <button class="range-chip" type="button" data-range="this_month">This Month</button>
+                <button class="range-chip" type="button" data-range="this_quarter">This Quarter</button>
+                <button class="range-chip" type="button" data-range="this_year">This Year</button>
+                <button class="range-chip" type="button" data-range="custom_range">Custom Range</button>
               </div>
-              <div class="stat-value">24</div>
-              <div class="stat-meta"><span class="up">+6.2%</span><span>vs last month</span></div>
+
+              <label class="filter-select">
+                <span>Project</span>
+                <select aria-label="Project filter">
+                  <option>All Projects</option>
+                  <option>Healing History Project</option>
+                  <option>Magarini Children Centre &amp; Organic Farming Demonstration Farm</option>
+                  <option>River's Way Community Clinic</option>
+                </select>
+              </label>
+            </div>
+          </section>
+
+          <section class="stats-grid" aria-label="Key impact metrics">
+            <article class="stat-card" data-kpi="people-reached">
+              <div class="stat-row">
+                <span class="stat-label">Total People Reached</span>
+                <span class="stat-pill">People</span>
+              </div>
+              <div class="stat-value" id="metricPeople">0</div>
+              <div class="stat-meta"><span class="up">↑ 0%</span><span>vs previous period</span></div>
             </article>
 
-            <article class="stat-card">
+            <article class="stat-card" data-kpi="households-benefiting">
               <div class="stat-row">
-                <span class="stat-label">People Assisted</span>
-                <span class="stat-pill">◍</span>
+                <span class="stat-label">Households Benefiting</span>
+                <span class="stat-pill"></span>
               </div>
-              <div class="stat-value">1,284</div>
-              <div class="stat-meta"><span class="up">+14.8%</span><span>this week</span></div>
+              <div class="stat-value" id="metricHouseholds">0</div>
+              <div class="stat-meta"><span class="up">↑ 0%</span><span>vs previous period</span></div>
             </article>
 
-            <article class="stat-card">
+            <article class="stat-card" data-kpi="children-supported">
               <div class="stat-row">
-                <span class="stat-label">Donations Received</span>
-                <span class="stat-pill">$</span>
+                <span class="stat-label">Children Supported</span>
+                <span class="stat-pill"></span>
               </div>
-              <div class="stat-value">$84.5K</div>
-              <div class="stat-meta"><span class="up">+9.4%</span><span>this month</span></div>
+              <div class="stat-value" id="metricChildren">0</div>
+              <div class="stat-meta"><span class="up">↑ 0%</span><span>vs previous period</span></div>
             </article>
 
-            <article class="stat-card">
+            <article class="stat-card" data-kpi="communities-reached">
               <div class="stat-row">
-                <span class="stat-label">Active Volunteers</span>
-                <span class="stat-pill">◌</span>
+                <span class="stat-label">Communities Reached</span>
+                <span class="stat-pill"></span>
               </div>
-              <div class="stat-value">48</div>
-              <div class="stat-meta"><span class="up">+3</span><span>new sign-ups</span></div>
+              <div class="stat-value" id="metricCommunities">0</div>
+              <div class="stat-meta"><span class="up">↑ 0%</span><span>vs previous period</span></div>
             </article>
+
+            <article class="stat-card" data-kpi="active-projects">
+              <div class="stat-row">
+                <span class="stat-label">Active Projects</span>
+                <span class="stat-pill">Projects</span>
+              </div>
+              <div class="stat-value" id="metricProjects">0</div>
+              <div class="stat-meta"><span class="up">↑ 0%</span><span>vs previous period</span></div>
+            </article>
+
+            <article class="stat-card" data-kpi="support-activities">
+              <div class="stat-row">
+                <span class="stat-label">Aid/Support Activities</span>
+                <span class="stat-pill">Activities</span>
+              </div>
+              <div class="stat-value" id="metricActivities">0</div>
+              <div class="stat-meta"><span class="up">↑ 0%</span><span>vs previous period</span></div>
+            </article>
+          </section>
+
+          <section class="panel impact-map-section" aria-label="Impact and geographic reach">
+            <div class="panel-header">
+              <h3 class="panel-title">Impact &amp; Geographic Reach</h3>
+              <div class="segmented" aria-label="Impact filters">
+                <button type="button" class="active">Project</button>
+                <button type="button">Country</button>
+                <button type="button">Region</button>
+                <button type="button">Date</button>
+                <button type="button">Activity type</button>
+              </div>
+            </div>
+
+            <div class="map-layout">
+              <div class="map-panel">
+                <div class="map-surface" aria-label="Impact map showing project areas in Ukraine">
+                  <div id="ukraineMapContainer" class="ukraine-map" aria-live="polite"></div>
+                  <div id="mapTooltip" class="map-tooltip" role="tooltip"></div>
+                </div>
+
+                <div class="map-legend">
+                  <span class="legend-item"><span class="legend-swatch reached"></span> Stable</span>
+                  <span class="legend-item"><span class="legend-swatch active"></span> Attention needed</span>
+                  <span class="legend-item"><span class="legend-swatch project"></span> Elevated concern</span>
+                  <span class="legend-item"><span class="legend-swatch no-activity"></span> Critical</span>
+                  <span class="legend-item"><span class="legend-swatch" style="background: #9aa7b7;"></span> No data</span>
+                </div>
+              </div>
+
+              <aside class="selection-card">
+                <h4>Selected area</h4>
+                <div class="detail-list">
+                  <div class="detail-row"><span>Location</span><strong id="mapLocation">Kyiv</strong></div>
+                  <div class="detail-row"><span>Status</span><strong id="mapStatus">Active field operations</strong></div>
+                  <div class="detail-row"><span>Project</span><strong id="mapProject">Community resilience</strong></div>
+                  <div class="detail-row"><span>Households reached</span><strong id="mapHouseholds">900</strong></div>
+                  <div class="detail-row"><span>People reached</span><strong id="mapPeople">3,620</strong></div>
+                  <div class="detail-row"><span>Children reached</span><strong id="mapChildren">1,250</strong></div>
+                  <div class="detail-row"><span>Activities</span><strong id="mapActivities">31</strong></div>
+                  <div class="detail-row"><span>Latest activity date</span><strong id="mapDate">21 May 2026</strong></div>
+                </div>
+              </aside>
+            </div>
           </section>
 
           <div class="content-grid">
@@ -1105,34 +1631,34 @@
 
               <div class="activity-list">
                 <div class="activity-item">
-                  <div class="activity-icon">✦</div>
+                  <div class="activity-icon">A</div>
                   <div class="activity-copy">
-                    <p class="activity-title">New aid program created</p>
-                    <div class="activity-meta">Kyiv Relief Program • 10 min ago</div>
+                    <p class="activity-title">Program record created</p>
+                    <div class="activity-meta">Operations activity • updated recently</div>
                   </div>
                 </div>
 
                 <div class="activity-item">
-                  <div class="activity-icon">$</div>
+                  <div class="activity-icon">I</div>
                   <div class="activity-copy">
-                    <p class="activity-title">Donation received</p>
-                    <div class="activity-meta">International Partner • 35 min ago</div>
+                    <p class="activity-title">Impact update logged</p>
+                    <div class="activity-meta">Support tracking • refreshed automatically</div>
                   </div>
                 </div>
 
                 <div class="activity-item">
-                  <div class="activity-icon">✓</div>
+                  <div class="activity-icon">Q</div>
                   <div class="activity-copy">
-                    <p class="activity-title">Beneficiary record updated</p>
-                    <div class="activity-meta">Case review completed • 1 hour ago</div>
+                    <p class="activity-title">Beneficiary data reviewed</p>
+                    <div class="activity-meta">Case quality check • latest entry</div>
                   </div>
                 </div>
 
                 <div class="activity-item">
-                  <div class="activity-icon">☰</div>
+                  <div class="activity-icon">R</div>
                   <div class="activity-copy">
-                    <p class="activity-title">Volunteer onboarding approved</p>
-                    <div class="activity-meta">Operations team • 2 hours ago</div>
+                    <p class="activity-title">Operations review queued</p>
+                    <div class="activity-meta">Team coordination • pending summary</div>
                   </div>
                 </div>
               </div>
@@ -1152,73 +1678,24 @@
                     <tr>
                       <th>Program</th>
                       <th>Location</th>
-                      <th>Beneficiaries</th>
+                      <th>People Reached</th>
                       <th>Status</th>
-                      <th>Progress</th>
+                      <th>Latest Activity</th>
                       <th>Action</th>
                     </tr>
                   </thead>
-                  <tbody>
-                    <tr>
-                      <td>Kyiv Community Relief</td>
-                      <td>Kyiv</td>
-                      <td>248</td>
-                      <td><span class="status-badge active">Active</span></td>
-                      <td>
-                        <div class="progress-wrap">
-                          <div class="progress-track"><div class="progress-fill" style="width:78%"></div></div>
-                          <span>78%</span>
-                        </div>
-                      </td>
-                      <td><a href="#" class="tiny-link">View</a></td>
-                    </tr>
-                    <tr>
-                      <td>Cold Weather Support</td>
-                      <td>Lviv</td>
-                      <td>182</td>
-                      <td><span class="status-badge active">Active</span></td>
-                      <td>
-                        <div class="progress-wrap">
-                          <div class="progress-track"><div class="progress-fill" style="width:64%"></div></div>
-                          <span>64%</span>
-                        </div>
-                      </td>
-                      <td><a href="#" class="tiny-link">View</a></td>
-                    </tr>
-                    <tr>
-                      <td>Mobile Health Response</td>
-                      <td>Mykolaiv</td>
-                      <td>96</td>
-                      <td><span class="status-badge planned">Planned</span></td>
-                      <td>
-                        <div class="progress-wrap">
-                          <div class="progress-track"><div class="progress-fill" style="width:42%"></div></div>
-                          <span>42%</span>
-                        </div>
-                      </td>
-                      <td><a href="#" class="tiny-link">View</a></td>
-                    </tr>
-                  </tbody>
+                  <tbody id="projectTableBody"></tbody>
                 </table>
               </div>
 
               <div class="program-cards" style="display:none;">
                 <div class="program-card">
-                  <h4>Kyiv Community Relief</h4>
-                  <div class="program-meta"><span>Location</span><strong>Kyiv</strong></div>
-                  <div class="program-meta"><span>Beneficiaries</span><strong>248</strong></div>
-                  <div class="program-meta"><span>Status</span><strong>Active</strong></div>
-                  <div class="program-progress"><span>Progress</span><span>78%</span></div>
-                  <div class="progress-track" style="width:100%; margin-top:8px;"><div class="progress-fill" style="width:78%"></div></div>
-                </div>
-
-                <div class="program-card">
-                  <h4>Cold Weather Support</h4>
-                  <div class="program-meta"><span>Location</span><strong>Lviv</strong></div>
-                  <div class="program-meta"><span>Beneficiaries</span><strong>182</strong></div>
-                  <div class="program-meta"><span>Status</span><strong>Active</strong></div>
-                  <div class="program-progress"><span>Progress</span><span>64%</span></div>
-                  <div class="progress-track" style="width:100%; margin-top:8px;"><div class="progress-fill" style="width:64%"></div></div>
+                  <h4>Live program data</h4>
+                  <div class="program-meta"><span>Location</span><strong>From database</strong></div>
+                  <div class="program-meta"><span>Beneficiaries</span><strong>Updated live</strong></div>
+                  <div class="program-meta"><span>Status</span><strong>Current</strong></div>
+                  <div class="program-progress"><span>Progress</span><span>Syncing</span></div>
+                  <div class="progress-track" style="width:100%; margin-top:8px;"><div class="progress-fill" style="width:100%"></div></div>
                 </div>
               </div>
             </section>
@@ -1229,12 +1706,142 @@
               </div>
 
               <div class="quick-actions">
-                <button class="quick-btn primary" type="button"><span class="action-icon">＋</span> Add Aid Program</button>
+                <button class="quick-btn primary" type="button" data-scroll-target="newProjectForm"><span class="action-icon">＋</span> Add Aid Program</button>
                 <button class="quick-btn" type="button"><span class="action-icon">👤</span> Register Beneficiary</button>
                 <button class="quick-btn" type="button"><span class="action-icon">$</span> Record Donation</button>
                 <button class="quick-btn" type="button"><span class="action-icon">✦</span> Add Volunteer</button>
                 <button class="quick-btn" type="button"><span class="action-icon">▣</span> Generate Report</button>
               </div>
+
+              <form id="newProjectForm" class="project-form" novalidate>
+                <div class="form-grid">
+                  <label>
+                    Project name
+                    <input name="name" type="text" placeholder="e.g. Peace Kitchen Initiative" required />
+                  </label>
+                  <label>
+                    Location
+                    <input name="location" type="text" placeholder="e.g. Nairobi, Kenya" />
+                  </label>
+                </div>
+
+                <label>
+                  Description
+                  <textarea name="description" placeholder="Describe the project goal, scope, and beneficiaries."></textarea>
+                </label>
+
+                <div class="form-grid">
+                  <label>
+                    Status
+                    <select name="status">
+                      <option value="active">Active</option>
+                      <option value="planned">Planned</option>
+                      <option value="completed">Completed</option>
+                    </select>
+                  </label>
+                  <label>
+                    Project manager
+                    <input name="projectManager" type="text" placeholder="Name or team" />
+                  </label>
+                </div>
+
+                <div class="submit-row">
+                  <button type="submit" class="quick-btn primary" style="width: auto; margin: 0;">Create project</button>
+                  <span id="projectFormStatus" class="status-text" aria-live="polite"></span>
+                </div>
+              </form>
+
+              <div class="panel-header" style="margin-top: 24px; margin-bottom: 0;">
+                <h3 class="panel-title">Impact Tracker</h3>
+              </div>
+
+              <div id="impactList" class="impact-list" aria-live="polite"></div>
+
+              <form id="newImpactForm" class="impact-form" novalidate>
+                <div class="form-grid">
+                  <label>
+                    Community
+                    <input name="community" type="text" placeholder="e.g. Makindu" />
+                  </label>
+                  <label>
+                    Activity type
+                    <input name="activityType" type="text" placeholder="e.g. food distribution" />
+                  </label>
+                </div>
+
+                <div class="form-grid">
+                  <label>
+                    Activity date
+                    <input name="activityDate" type="date" value="" />
+                  </label>
+                  <label>
+                    People reached
+                    <input name="peopleReached" type="number" min="0" value="0" />
+                  </label>
+                </div>
+
+                <div class="form-grid">
+                  <label>
+                    Households reached
+                    <input name="householdsReached" type="number" min="0" value="0" />
+                  </label>
+                  <label>
+                    Project / program
+                    <input name="projectName" type="text" placeholder="e.g. Community Relief" />
+                  </label>
+                </div>
+
+                <label>
+                  Outcome
+                  <textarea name="description" placeholder="Describe the outcome, support delivered, and observed effect."></textarea>
+                </label>
+
+                <div class="submit-row">
+                  <button type="submit" class="quick-btn primary" style="width: auto; margin: 0;">Record impact</button>
+                  <span id="impactFormStatus" class="status-text" aria-live="polite"></span>
+                </div>
+              </form>
+
+              <div class="panel-header" style="margin-top: 24px; margin-bottom: 0;">
+                <h3 class="panel-title">Content Manager</h3>
+              </div>
+
+              <div id="contentList" class="impact-list" aria-live="polite"></div>
+
+              <form id="newContentForm" class="content-form" novalidate>
+                <label>
+                  Article title
+                  <input name="title" type="text" placeholder="e.g. Rebuilding dignity after conflict" required />
+                </label>
+
+                <div class="form-grid">
+                  <label>
+                    Category
+                    <select name="category">
+                      <option value="story">Story</option>
+                      <option value="news">News</option>
+                      <option value="impact">Impact</option>
+                    </select>
+                  </label>
+                  <label>
+                    Status
+                    <select name="status">
+                      <option value="draft">Draft</option>
+                      <option value="published">Published</option>
+                    </select>
+                  </label>
+                </div>
+
+                <label>
+                  Excerpt
+                  <textarea name="excerpt" placeholder="A short summary for the article card."></textarea>
+                </label>
+
+                <div class="submit-row">
+                  <button type="submit" class="quick-btn primary" style="width: auto; margin: 0;">Save post</button>
+                  <span id="contentFormStatus" class="status-text" aria-live="polite"></span>
+                </div>
+              </form>
             </aside>
           </div>
         </div>
@@ -1252,36 +1859,41 @@
         </div>
       </div>
       <div class="drawer-profile">
-        <div class="avatar">AS</div>
+        <div class="avatar">AD</div>
         <div>
-          <div style="font-size:0.9rem; font-weight:700;">Alicia Stone</div>
-          <div style="font-size:0.74rem; color:var(--muted);">Administrator</div>
+          <div style="font-size:0.9rem; font-weight:700;">Administrator</div>
+          <div style="font-size:0.74rem; color:var(--muted);">Super Administrator</div>
         </div>
       </div>
       <div class="drawer-list">
         <div class="drawer-item active">Dashboard</div>
-        <div class="drawer-item">Beneficiaries</div>
-        <div class="drawer-item">Aid Programs</div>
-        <div class="drawer-item">Donations</div>
-        <div class="drawer-item">Projects</div>
-        <div class="drawer-item">Volunteers</div>
-        <div class="drawer-item">Partners</div>
-        <div class="drawer-item">Reports</div>
-        <div class="drawer-item">Messages</div>
+        <div class="drawer-item">Website</div>
+        <div class="drawer-item" style="padding-left: 22px; color: var(--muted);">Pages</div>
+        <div class="drawer-item" style="padding-left: 22px; color: var(--muted);">Posts &amp; Stories</div>
+        <div class="drawer-item" style="padding-left: 22px; color: var(--muted);">Projects</div>
+        <div class="drawer-item" style="padding-left: 22px; color: var(--muted);">Testimonials</div>
+        <div class="drawer-item" style="padding-left: 22px; color: var(--muted);">Events</div>
+        <div class="drawer-item" style="padding-left: 22px; color: var(--muted);">Media Library</div>
+        <div class="drawer-item" style="padding-left: 22px; color: var(--muted);">Navigation</div>
+        <div class="drawer-item">Impact</div>
+        <div class="drawer-item" style="padding-left: 22px; color: var(--muted);">Impact Overview</div>
+        <div class="drawer-item" style="padding-left: 22px; color: var(--muted);">Aid/Support Records</div>
+        <div class="drawer-item" style="padding-left: 22px; color: var(--muted);">Beneficiaries</div>
+        <div class="drawer-item" style="padding-left: 22px; color: var(--muted);">Locations</div>
+        <div class="drawer-item" style="padding-left: 22px; color: var(--muted);">Impact Reports</div>
+        <div class="drawer-item">Team</div>
+        <div class="drawer-item" style="padding-left: 22px; color: var(--muted);">Team Members</div>
+        <div class="drawer-item" style="padding-left: 22px; color: var(--muted);">Users</div>
+        <div class="drawer-item" style="padding-left: 22px; color: var(--muted);">Roles &amp; Permissions</div>
+        <div class="drawer-item" style="padding-left: 22px; color: var(--muted);">Activity Log</div>
+        <div class="drawer-item">System</div>
+        <div class="drawer-item" style="padding-left: 22px; color: var(--muted);">Settings</div>
+        <div class="drawer-item" style="padding-left: 22px; color: var(--muted);">Website Settings</div>
+        <div class="drawer-item" style="padding-left: 22px; color: var(--muted);">Notifications</div>
       </div>
       <div class="drawer-footer">
-        <div class="drawer-item">Settings</div>
-        <div class="drawer-item">Help &amp; Support</div>
         <div class="drawer-item">Logout</div>
       </div>
-    </nav>
-
-    <nav class="footer-nav" aria-label="Bottom navigation">
-      <div class="foot-item active">Home</div>
-      <div class="foot-item">Programs</div>
-      <div class="foot-item">Beneficiaries</div>
-      <div class="foot-item">Donations</div>
-      <div class="foot-item">More</div>
     </nav>
 
     <script>
@@ -1289,9 +1901,52 @@
       const drawer = document.querySelector('.mobile-drawer');
       const backdrop = document.querySelector('.drawer-backdrop');
 
+      function setActiveNavItem(item) {
+        const navItems = document.querySelectorAll('.nav-item');
+        navItems.forEach((navItem) => {
+          navItem.classList.toggle('active', navItem === item);
+        });
+
+        const drawerItems = document.querySelectorAll('.drawer-item');
+        drawerItems.forEach((drawerItem) => {
+          drawerItem.classList.toggle('active', drawerItem === item);
+        });
+      }
+
+      function bindNavigation() {
+        document.querySelectorAll('.nav-item.has-parent').forEach((parentItem) => {
+          parentItem.addEventListener('click', () => {
+            const submenu = parentItem.nextElementSibling;
+            const isOpen = parentItem.classList.toggle('is-open');
+            if (submenu && submenu.classList.contains('nav-submenu')) {
+              submenu.classList.toggle('open', isOpen);
+            }
+            setActiveNavItem(parentItem);
+          });
+        });
+
+        document.querySelectorAll('.nav-item:not(.has-parent), .drawer-item').forEach((item) => {
+          item.addEventListener('click', () => {
+            setActiveNavItem(item);
+            if (drawer && drawer.classList.contains('open')) {
+              drawer.classList.remove('open');
+            }
+            if (backdrop) {
+              backdrop.style.display = 'none';
+            }
+          });
+        });
+      }
+
       function toggleDrawer() {
         const isOpen = drawer.classList.toggle('open');
-        backdrop.style.display = isOpen ? 'block' : 'none';
+        if (backdrop) {
+          backdrop.style.display = isOpen ? 'block' : 'none';
+          backdrop.classList.toggle('show', isOpen);
+        }
+        if (drawer) {
+          drawer.classList.toggle('show', isOpen);
+        }
       }
 
       if (hamburger) {
@@ -1301,6 +1956,469 @@
       if (backdrop) {
         backdrop.addEventListener('click', toggleDrawer);
       }
+
+      function formatNumber(value) {
+        const num = Number(value || 0);
+        return new Intl.NumberFormat().format(num);
+      }
+
+      function updateSummary(summary = {}) {
+        if (!summary) return;
+        document.getElementById('metricProjects').textContent = formatNumber(summary.totalProjects || 0);
+        document.getElementById('metricPeople').textContent = formatNumber(summary.totalPeopleReached || 0);
+        document.getElementById('metricHouseholds').textContent = formatNumber(summary.totalHouseholdsReached || 0);
+        document.getElementById('metricChildren').textContent = formatNumber(summary.totalChildrenReached || 0);
+        document.getElementById('metricCommunities').textContent = formatNumber(summary.totalCommunitiesReached || 0);
+        document.getElementById('metricActivities').textContent = formatNumber(summary.totalActivities || summary.totalImpactRecords || 0);
+        const recordsNode = document.getElementById('metricRecords');
+        if (recordsNode) {
+          recordsNode.textContent = formatNumber(summary.totalImpactRecords || 0);
+        }
+      }
+
+      function populateProjects(projects = []) {
+        const tbody = document.getElementById('projectTableBody');
+        if (!tbody) return;
+
+        if (!projects.length) {
+          tbody.innerHTML = `
+            <tr>
+              <td colspan="6" style="padding: 20px; color: var(--muted); text-align: center;">No project data recorded yet.</td>
+            </tr>
+          `;
+          return;
+        }
+
+        tbody.innerHTML = projects.map((project) => {
+          const latest = project.latest_activity ? new Date(project.latest_activity).toLocaleDateString() : 'No activity yet';
+          const status = project.status || 'active';
+          return `
+            <tr>
+              <td>${project.name}</td>
+              <td>${project.location || 'Not set'}</td>
+              <td>${formatNumber(project.people_reached || 0)}</td>
+              <td><span class="status-badge ${status === 'active' ? 'active' : 'planned'}">${status}</span></td>
+              <td>${latest}</td>
+              <td><button type="button" class="tiny-link" style="border:none;background:none;padding:0;cursor:pointer;color:var(--primary-blue);font-weight:700;">View</button></td>
+            </tr>
+          `;
+        }).join('');
+      }
+
+      async function submitProjectForm(event) {
+        event.preventDefault();
+        const form = event.currentTarget;
+        const formStatus = document.getElementById('projectFormStatus');
+        const data = Object.fromEntries(new FormData(form).entries());
+
+        if (!data.name || !String(data.name).trim()) {
+          formStatus.textContent = 'Project name is required.';
+          formStatus.className = 'status-text error';
+          return;
+        }
+
+        try {
+          formStatus.textContent = 'Creating project...';
+          formStatus.className = 'status-text';
+
+          const response = await fetch('/api/projects', {
+            method: 'POST',
+            credentials: 'same-origin',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              name: String(data.name).trim(),
+              location: data.location ? String(data.location).trim() : null,
+              description: data.description ? String(data.description).trim() : null,
+              status: data.status || 'active',
+              projectManager: data.projectManager ? String(data.projectManager).trim() : null,
+            }),
+          });
+
+          const result = await response.json().catch(() => ({}));
+          if (!response.ok) {
+            throw new Error(result.error || 'Unable to create project.');
+          }
+
+          form.reset();
+          formStatus.textContent = 'Project created successfully.';
+          formStatus.className = 'status-text success';
+          await loadDashboard();
+        } catch (error) {
+          formStatus.textContent = error.message || 'Unable to create project.';
+          formStatus.className = 'status-text error';
+        }
+      }
+
+      async function submitImpactForm(event) {
+        event.preventDefault();
+        const form = event.currentTarget;
+        const formStatus = document.getElementById('impactFormStatus');
+        const data = Object.fromEntries(new FormData(form).entries());
+
+        try {
+          formStatus.textContent = 'Recording impact...';
+          formStatus.className = 'status-text';
+
+          const response = await fetch('/api/impact', {
+            method: 'POST',
+            credentials: 'same-origin',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              community: data.community ? String(data.community).trim() : null,
+              activityType: data.activityType ? String(data.activityType).trim() : null,
+              activityDate: data.activityDate ? String(data.activityDate) : new Date().toISOString().slice(0, 10),
+              peopleReached: Number(data.peopleReached || 0),
+              householdsReached: Number(data.householdsReached || 0),
+              description: data.description ? String(data.description).trim() : null,
+            }),
+          });
+
+          const result = await response.json().catch(() => ({}));
+          if (!response.ok) {
+            throw new Error(result.error || 'Unable to record impact.');
+          }
+
+          form.reset();
+          formStatus.textContent = 'Impact recorded.';
+          formStatus.className = 'status-text success';
+          await loadImpactRecords();
+          await loadDashboard();
+        } catch (error) {
+          formStatus.textContent = error.message || 'Unable to record impact.';
+          formStatus.className = 'status-text error';
+        }
+      }
+
+      function renderImpactList(records = []) {
+        const list = document.getElementById('impactList');
+        if (!list) return;
+
+        if (!records.length) {
+          list.innerHTML = '<div class="impact-item">No impact records yet.</div>';
+          return;
+        }
+
+        list.innerHTML = records.slice(0, 4).map((record) => {
+          const label = record.community || 'Community impact';
+          const outcome = record.description || record.outcome || 'Impact logged by program team.';
+          return `
+            <div class="impact-item">
+              <strong>${label}</strong>
+              <div>${record.activity_type || 'Program activity'} • ${Number(record.people_reached || 0)} people • ${Number(record.households_reached || 0)} households</div>
+              <small style="color: var(--muted);">${outcome}</small>
+            </div>
+          `;
+        }).join('');
+      }
+
+      async function loadImpactRecords() {
+        try {
+          const response = await fetch('/api/impact', { credentials: 'same-origin', cache: 'no-store' });
+          if (!response.ok) throw new Error('Unable to load impact records.');
+          const rows = await response.json();
+          renderImpactList(rows || []);
+        } catch (error) {
+          const list = document.getElementById('impactList');
+          if (list) list.innerHTML = '<div class="impact-item">Unable to load impact records.</div>';
+        }
+      }
+
+      function renderContentList(rows = []) {
+        const list = document.getElementById('contentList');
+        if (!list) return;
+
+        if (!rows.length) {
+          list.innerHTML = '<div class="impact-item">No content created yet.</div>';
+          return;
+        }
+
+        list.innerHTML = rows.slice(0, 4).map((row) => `
+          <div class="impact-item">
+            <strong>${row.title || 'Untitled content'}</strong>
+            <div>${row.category || 'story'} • ${row.status || 'draft'}</div>
+            <small style="color: var(--muted);">${row.excerpt || 'New article'}</small>
+          </div>
+        `).join('');
+      }
+
+      async function loadContentPosts() {
+        try {
+          const response = await fetch('/api/posts', { credentials: 'same-origin', cache: 'no-store' });
+          if (!response.ok) throw new Error('Unable to load content posts.');
+          const rows = await response.json();
+          renderContentList(rows || []);
+        } catch (error) {
+          const list = document.getElementById('contentList');
+          if (list) list.innerHTML = '<div class="impact-item">Unable to load content posts.</div>';
+        }
+      }
+
+      async function submitContentForm(event) {
+        event.preventDefault();
+        const form = event.currentTarget;
+        const formStatus = document.getElementById('contentFormStatus');
+        const data = Object.fromEntries(new FormData(form).entries());
+
+        if (!data.title || !String(data.title).trim()) {
+          formStatus.textContent = 'Title is required.';
+          formStatus.className = 'status-text error';
+          return;
+        }
+
+        try {
+          formStatus.textContent = 'Saving post...';
+          formStatus.className = 'status-text';
+
+          const response = await fetch('/api/posts', {
+            method: 'POST',
+            credentials: 'same-origin',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              title: String(data.title).trim(),
+              excerpt: data.excerpt ? String(data.excerpt).trim() : null,
+              category: data.category || 'story',
+              status: data.status || 'draft',
+              content: data.excerpt ? String(data.excerpt).trim() : 'Story content pending completion.',
+            }),
+          });
+
+          const result = await response.json().catch(() => ({}));
+          if (!response.ok) {
+            throw new Error(result.error || 'Unable to save post.');
+          }
+
+          form.reset();
+          formStatus.textContent = 'Post saved.';
+          formStatus.className = 'status-text success';
+          await loadContentPosts();
+          await loadDashboard();
+        } catch (error) {
+          formStatus.textContent = error.message || 'Unable to save post.';
+          formStatus.className = 'status-text error';
+        }
+      }
+
+      function applyUserInfo(session) {
+        const admin = session && session.admin ? session.admin : { fullName: 'Administrator', email: 'admin@ipg.org' };
+        const fullName = admin.fullName || admin.email || 'Administrator';
+        const initials = fullName.split(' ').map(part => part[0]).slice(0, 2).join('').toUpperCase() || 'AD';
+
+        document.getElementById('sidebarAvatar').textContent = initials;
+        document.getElementById('sidebarName').textContent = fullName;
+        document.getElementById('sidebarRole').textContent = 'Super Administrator';
+        document.getElementById('topbarAvatar').textContent = initials;
+        document.getElementById('topbarName').textContent = fullName.split(' ')[0] || 'Admin';
+        document.getElementById('topbarRole').textContent = 'Super Administrator';
+      }
+
+      let currentDashboardRange = 'this_month';
+
+      function bindRangeFilters() {
+        document.querySelectorAll('.range-chip').forEach((chip) => {
+          chip.addEventListener('click', async () => {
+            currentDashboardRange = chip.dataset.range || 'this_month';
+            document.querySelectorAll('.range-chip').forEach((button) => {
+              button.classList.toggle('active', button === chip);
+            });
+            await loadDashboard(currentDashboardRange);
+          });
+        });
+      }
+
+      async function loadDashboard(range = currentDashboardRange) {
+        try {
+          currentDashboardRange = range || 'this_month';
+          const response = await fetch(`/api/admin/dashboard?range=${encodeURIComponent(currentDashboardRange)}`, { credentials: 'same-origin', cache: 'no-store' });
+          if (!response.ok) {
+            if (response.status === 401) {
+              window.location.href = '/admin/login';
+              return;
+            }
+            throw new Error('Unable to load dashboard data.');
+          }
+
+          const data = await response.json();
+          applyUserInfo(data);
+          updateSummary(data?.stats?.summary || {});
+          populateProjects(data?.projects || []);
+        } catch (error) {
+          document.getElementById('projectTableBody').innerHTML = `
+            <tr>
+              <td colspan="6" style="padding: 20px; color: var(--muted); text-align: center;">${error.message || 'Unable to load dashboard data.'}</td>
+            </tr>
+          `;
+        }
+      }
+
+      const projectForm = document.getElementById('newProjectForm');
+      if (projectForm) {
+        projectForm.addEventListener('submit', submitProjectForm);
+      }
+
+      const impactForm = document.getElementById('newImpactForm');
+      if (impactForm) {
+        impactForm.addEventListener('submit', submitImpactForm);
+      }
+
+      const contentForm = document.getElementById('newContentForm');
+      if (contentForm) {
+        contentForm.addEventListener('submit', submitContentForm);
+      }
+
+      document.querySelector('[data-scroll-target="newProjectForm"]')?.addEventListener('click', () => {
+        const form = document.getElementById('newProjectForm');
+        if (form) {
+          form.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          const firstInput = form.querySelector('input[name="name"]');
+          if (firstInput) firstInput.focus();
+        }
+      });
+
+      const mapStatusColors = {
+        stable: '#2e9f6a',
+        attention: '#f4c95d',
+        elevated: '#f59e0b',
+        critical: '#d94a3d',
+        'no-data': '#9aa7b7',
+      };
+
+      const mapRegionData = {
+        Kyiv: { status: 'Attention needed', project: 'Community resilience', households: '900', people: '3,620', children: '1,250', activities: '31', date: '21 May 2026' },
+        Lviv: { status: 'Stable', project: 'Support and shelter', households: '620', people: '2,480', children: '860', activities: '18', date: '24 May 2026' },
+        Kharkiv: { status: 'Critical', project: 'Emergency aid', households: '1,050', people: '4,150', children: '1,480', activities: '36', date: '23 May 2026' },
+        Dnipro: { status: 'Stable', project: 'Food and medical kits', households: '730', people: '2,980', children: '1,100', activities: '27', date: '22 May 2026' },
+        Odesa: { status: 'Elevated concern', project: 'Support coordination', households: '470', people: '1,860', children: '640', activities: '16', date: '20 May 2026' },
+        Kherson: { status: 'Attention needed', project: 'Water and sanitation', households: '310', people: '1,240', children: '430', activities: '12', date: '18 May 2026' },
+        'Chernihiv': { status: 'No data', project: 'Pending assessment', households: '0', people: '0', children: '0', activities: '0', date: 'No update yet' },
+        'Zaporizhzhia': { status: 'Elevated concern', project: 'Relief distribution', households: '540', people: '2,140', children: '780', activities: '19', date: '17 May 2026' },
+        'Volyn': { status: 'Stable', project: 'Regional support', households: '340', people: '1,420', children: '520', activities: '13', date: '19 May 2026' },
+      };
+
+      const oblastNameMap = {
+        UA05: 'Vinnytsia', UA07: 'Volyn', UA09: 'Luhansk', UA12: 'Dnipropetrovsk', UA14: 'Donetsk', UA18: 'Zhytomyr', UA21: 'Ivano-Frankivsk',
+        UA23: 'Zaporizhzhia', UA26: 'Ivano-Frankivsk', UA30: 'Kyiv', UA35: 'Kirovohrad', UA43: 'Poltava', UA46: 'Lviv', UA48: 'Mykolaiv',
+        UA51: 'Odesa', UA53: 'Poltava', UA56: 'Cherkasy', UA59: 'Chernihiv', UA61: 'Sumy', UA63: 'Kharkiv', UA65: 'Kherson', UA68: 'Rivne',
+        UA70: 'Ternopil', UA74: 'Chernihiv', UA77: 'Crimea', UA80: 'Kyiv City', UA85: 'Khmelnytskyi', UA89: 'Zakarpattia', UA92: 'Lviv',
+      };
+
+      function normalizeStatus(status) {
+        const value = String(status || '').trim().toLowerCase();
+        if (value.includes('critical')) return 'critical';
+        if (value.includes('attention')) return 'attention';
+        if (value.includes('elevated') || value.includes('concern')) return 'elevated';
+        if (value.includes('stable')) return 'stable';
+        return 'no-data';
+      }
+
+      function updateMapSelection(regionName) {
+        const selected = mapRegionData[regionName] || mapRegionData.Kyiv;
+        document.getElementById('mapLocation').textContent = regionName;
+        document.getElementById('mapStatus').textContent = selected.status;
+        document.getElementById('mapProject').textContent = selected.project;
+        document.getElementById('mapHouseholds').textContent = selected.households;
+        document.getElementById('mapPeople').textContent = selected.people;
+        document.getElementById('mapChildren').textContent = selected.children;
+        document.getElementById('mapActivities').textContent = selected.activities;
+        document.getElementById('mapDate').textContent = selected.date;
+      }
+
+      function loadUkraineMap() {
+        const container = document.getElementById('ukraineMapContainer');
+        if (!container) return;
+
+        const tooltip = document.getElementById('mapTooltip');
+        const assetPaths = [
+          '/public/ua.svg',
+          'https://pub-b2e691025f20417aaae7fc6f66f2ac7d.r2.dev/IPG/ua.svg'
+        ];
+
+        async function loadMapFromUrl(url) {
+          const response = await fetch(url, { cache: 'no-store' });
+          if (!response.ok) throw new Error('Unsuccessful response');
+          return response.text();
+        }
+
+        (async () => {
+          let svgText = '';
+
+          for (const candidate of assetPaths) {
+            try {
+              svgText = await loadMapFromUrl(candidate);
+              break;
+            } catch (error) {
+              continue;
+            }
+          }
+
+          if (!svgText) {
+            container.innerHTML = '<div style="display:grid;place-items:center;height:100%;color:var(--muted);">Unable to load Ukraine map.</div>';
+            return;
+          }
+
+          const parser = new DOMParser();
+          const doc = parser.parseFromString(svgText, 'image/svg+xml');
+          const svg = doc.querySelector('svg');
+
+          if (!svg) {
+            container.innerHTML = '<div style="display:grid;place-items:center;height:100%;color:var(--muted);">Map unavailable.</div>';
+            return;
+          }
+
+          svg.setAttribute('viewBox', '0 0 1000 669');
+          svg.setAttribute('preserveAspectRatio', 'xMidYMid meet');
+          svg.setAttribute('class', 'ukraine-map');
+          svg.querySelectorAll('path').forEach((path) => {
+            const originalColor = path.getAttribute('fill') || '#dfeaf7';
+            const id = path.getAttribute('id') || '';
+            const name = oblastNameMap[id] || (id ? `Region ${id}` : 'Unknown oblast');
+            const statusKey = normalizeStatus(mapRegionData[name]?.status || 'no data');
+            const fill = mapStatusColors[statusKey] || originalColor;
+
+            path.setAttribute('fill', fill);
+            path.setAttribute('data-name', name);
+            path.setAttribute('data-status', mapRegionData[name]?.status || 'No data');
+            path.setAttribute('data-date', mapRegionData[name]?.date || 'No update yet');
+            path.classList.add('feature');
+
+            path.addEventListener('mouseenter', (event) => {
+              const status = path.getAttribute('data-status') || 'No data';
+              const date = path.getAttribute('data-date') || 'No update yet';
+              tooltip.innerHTML = `<strong>${name}</strong><br>${status}<br><span style="opacity:.82;">Latest update: ${date}</span>`;
+              tooltip.classList.add('visible');
+              tooltip.style.left = `${event.offsetX}px`;
+              tooltip.style.top = `${event.offsetY}px`;
+            });
+
+            path.addEventListener('mousemove', (event) => {
+              tooltip.style.left = `${event.offsetX}px`;
+              tooltip.style.top = `${event.offsetY}px`;
+            });
+
+            path.addEventListener('mouseleave', () => {
+              tooltip.classList.remove('visible');
+            });
+
+            path.addEventListener('click', () => {
+              document.querySelectorAll('.feature').forEach((node) => node.classList.remove('is-selected'));
+              path.classList.add('is-selected');
+              updateMapSelection(name);
+            });
+          });
+
+          container.innerHTML = '';
+          container.appendChild(svg);
+          updateMapSelection('Kyiv');
+        })().catch(() => {
+          container.innerHTML = '<div style="display:grid;place-items:center;height:100%;color:var(--muted);">Unable to load Ukraine map.</div>';
+        });
+      }
+
+      bindNavigation();
+      bindRangeFilters();
+      loadUkraineMap();
+      loadDashboard('this_month');
+      loadImpactRecords();
+      loadContentPosts();
     </script>
   </body>
 </html>
