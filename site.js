@@ -171,18 +171,34 @@ document.querySelectorAll('[data-slideshow]').forEach((slideshow) => {
   });
 });
 
-// Testimonial marquee: duplicate the cards so the rightward scroll loops
-// seamlessly, then wire each card + a shared modal for reading the full text.
+// Testimonial carousel: provide manual one-card navigation and a shared modal
+// for reading each full testimonial.
 document.querySelectorAll('[data-testimonial-marquee]').forEach((marquee) => {
   const track = marquee.querySelector('.testimonial-track');
   if (!track) return;
-  [...track.children].forEach((card) => {
-    const clone = card.cloneNode(true);
-    clone.setAttribute('aria-hidden', 'true');
-    clone.setAttribute('tabindex', '-1');
-    track.appendChild(clone);
-  });
-  marquee.classList.add('is-ready');
+  const previous = document.querySelector('[data-testimonial-prev]');
+  const next = document.querySelector('[data-testimonial-next]');
+  const updateControls = () => {
+    if (!previous || !next) return;
+    const maxScroll = marquee.scrollWidth - marquee.clientWidth;
+    const startPadding = Number.parseFloat(getComputedStyle(track).paddingLeft) || 0;
+    previous.disabled = marquee.scrollLeft <= startPadding + 1;
+    next.disabled = marquee.scrollLeft >= maxScroll - 1;
+  };
+  const scrollByCard = (direction) => {
+    const card = track.querySelector('.tcard');
+    if (!card) return;
+    const gap = Number.parseFloat(getComputedStyle(track).columnGap) || 0;
+    marquee.scrollBy({
+      left: direction * (card.getBoundingClientRect().width + gap),
+      behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth'
+    });
+  };
+  previous?.addEventListener('click', () => scrollByCard(-1));
+  next?.addEventListener('click', () => scrollByCard(1));
+  marquee.addEventListener('scroll', updateControls, { passive: true });
+  window.addEventListener('resize', updateControls);
+  updateControls();
 });
 
 document.querySelectorAll('[data-testimonial-modal]').forEach((modal) => {
@@ -396,7 +412,7 @@ document.querySelectorAll('.donate-toggle').forEach((btn) => {
   });
 });
 
-// Floating donate button + popup (home page). Auto-opens once per session.
+// Floating donate button + popup (home page).
 (() => {
   const widget = document.getElementById('donateWidget');
   if (!widget) return;
@@ -410,15 +426,11 @@ document.querySelectorAll('.donate-toggle').forEach((btn) => {
   btn.addEventListener('click', () => setOpen(pop.hidden));
   closeBtn.addEventListener('click', () => {
     setOpen(false);
-    try { sessionStorage.setItem('ipgDonateDismissed', '1'); } catch (e) {}
   });
   document.addEventListener('keydown', (e) => { if (e.key === 'Escape') setOpen(false); });
   document.addEventListener('click', (e) => {
     if (!widget.contains(e.target) && !pop.hidden) setOpen(false);
   });
-  let dismissed = false;
-  try { dismissed = sessionStorage.getItem('ipgDonateDismissed') === '1'; } catch (e) {}
-  if (!dismissed) setTimeout(() => setOpen(true), 1400);
 })();
 
 // Expand cards (home "our work" projects): compact card opens a wide modal
